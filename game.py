@@ -48,6 +48,14 @@ if __name__ == '__main__':
     board = Board()
     move_count = 0
     board.display()
+    while True:
+        if board.game_over():
+            print("")
+            break
+        action = input("Please input a move: ")
+        if not board.valid_action(action=action):
+            continue
+        # @TODO update game board
     # while True:
     #     move = board.play_move()
     #     move_count += 1

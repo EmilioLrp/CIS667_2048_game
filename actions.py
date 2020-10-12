@@ -1,20 +1,12 @@
-from getkey import keys
+from enum import Enum
 
 
-class Action:
-    # up = keys.UP
-    # down = keys.DOWN
-    # left = keys.LEFT
-    # right = keys.RIGHT
-    def __int__(self):
-        self._actions = {
-            "up": keys.UP,
-            "down": keys.DOWN,
-            "left": keys.LEFT,
-            "right": keys.RIGHT
-        }
-
-    def get_action(self):
-        return self._actions
-
-
+class Action(Enum):
+    up = "u",
+    down = "d",
+    left = "l",
+    right = "r",
+    upLeft = "uf",
+    upRight = "ur",
+    downLeft = "dl",
+    downRight = "dr"
