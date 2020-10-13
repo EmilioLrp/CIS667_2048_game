@@ -1,77 +1,39 @@
-import numpy as np
 from actions import Action
-from getkey import getkey
-import random
+from board import Board
 
 
-class Board:
+class Game:
     def __init__(self):
-        self._board_size = 4
-        self._game_board = np.zeros((self._board_size, self._board_size), dtype=int)
-        self._init_game()
-
-    def _init_game(self):
-        action = Action()
-        self.actions = action.get_action()
-        # generate 2 tiles with value 2 at random position
-        self._generate_rand_tile()
-        self._generate_rand_tile()
-
-    def _generate_rand_tile(self):
-        empty = np.argwhere(self._game_board == 0)
-        tile = random.sample(list(empty), 1)
-        self._game_board[tile[0][0]][tile[0][1]] = 2
-
-    def valid_action(self, action):
-
-        return False
+        self._game_board = Board()
 
     def display(self):
         print(self._game_board)
 
-    def _merge_tile(self, line):
-        pass
-
     def update_state(self, action):
         if action == Action.left:
-
-            for i in range(self._game_board.shape[0]):
-                line = # get line
-                self._merge_tile(line)
+            line = []
+            self._game_board.merge_tile(line=line)
             pass
         elif action == Action.right:
             pass
+
+    def valid_action(self, action):
+        pass
 
     def game_over(self):
 
         return False
 
-    def play_move(self):
-        # @TODO: override with tree search and machine learning algs
-        while True:
-            key = getkey()
-            if key in self.actions.values():
-                break
-        return key
-
 
 if __name__ == '__main__':
-    board = Board()
+    game = Game()
     move_count = 0
-    board.display()
+    game.display()
     while True:
-        if board.game_over():
+        if game.game_over():
             print("")
             break
         action = input("Please input a move: ")
-        if not board.valid_action(action=action):
+        if not game.valid_action(action=action):
             continue
-        # @TODO update game board
-    # while True:
-    #     move = board.play_move()
-    #     move_count += 1
-    #     board.update_state(move=move)
-    #     board.display()
-    #     if board.game_over():
-    #         break
-    # print("Total move used: %d" % move_count)
+            # @TODO update game board
