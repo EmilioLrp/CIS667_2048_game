@@ -26,29 +26,21 @@ class Board:
 
         return False
 
-    def _get_lines(self, action):
-        """
-        Get the list of lines along the preferred direction of movement.
-        Within each line, a list of the coordinate of each grid is stored
-        :param action:
-        :return:
-        """
-        lines = []
-        if action == Action.left or action == Action.right:
-            for i in range(self._game_board.shape[0]):
-               lines.append((i,))
-        elif action == Action.up or action == Action.down:
-            pass
-        elif action == Action.downLeft or action == Action.upRight:
-            pass
-        else:
-            pass
-
     def display(self):
         print(self._game_board)
 
-    def update_state(self, move):
+    def _merge_tile(self, line):
         pass
+
+    def update_state(self, action):
+        if action == Action.left:
+
+            for i in range(self._game_board.shape[0]):
+                line = # get line
+                self._merge_tile(line)
+            pass
+        elif action == Action.right:
+            pass
 
     def game_over(self):
 
