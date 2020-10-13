@@ -35,6 +35,71 @@ class Board:
     def game_over(self):
         return False
 
+    def __crush_line(self, line):
+        out = []
+        first = None
+        for i in range(len(line)):
+            if line[i] == 0:
+                continue
+            if not first:
+                first = line[i]
+            else:
+                if line[i] == first:
+                    out.append(first * 2)
+                    first = None
+                else:
+                    out.append(first)
+                    first = line[i]
+        if first:
+            out.append(first)
+        if len(out) < len(line):
+            out += [0] * (len(line) - len(out))
+        return out
+
+    def left(self):
+        valid = False
+        for i in range(len(self._game_board)):
+            move = self.__crush_line(self._game_board[i])
+            if not np.array_equal(self._game_board[i], move):
+                self._game_board[i] = move
+                valid = True
+        if valid:
+            self._generate_rand_tile()
+        return self._game_board, valid
+
+    def right(self):
+        valid = False
+        for i in range(len(self._game_board)):
+            move = self.__crush_line(self._game_board[i][::-1])[::-1]
+            if not np.array_equal(self._game_board[i], move):
+                self._game_board[i] = move
+                valid = True
+        if valid:
+            self._generate_rand_tile()
+        return self._game_board, valid
+
+    def up(self):
+        valid = False
+        for i in range(len(self._game_board)):
+            move = self.__crush_line(self._game_board[:,i])
+            if not np.array_equal(self._game_board[:,i], move):
+                self._game_board[:,i] = move
+                valid = True
+        if valid:
+            self._generate_rand_tile()
+        return self._game_board, valid
+
+    def down(self):
+        valid = False
+        for i in range(len(self._game_board)):
+            move = self.__crush_line(self._game_board[:,i][::-1])[::-1]
+            if not np.array_equal(self._game_board[:,i], move):
+                self._game_board[:,i] = move
+                valid = True
+        if valid:
+            self._generate_rand_tile()
+        return self._game_board, valid
+
     def play_move(self):
         # @TODO: override with tree search and machine learning algs
         while True:
@@ -48,6 +113,23 @@ if __name__ == '__main__':
     board = Board()
     move_count = 0
     board.display()
+    #moves = ['l','l','r','u']
+    while True:
+        m = input("Please input a move: ")
+        valid = True
+        if m == 'l':
+            _, valid = board.left()
+        elif m == 'r':
+            _, valid = board.right()
+        elif m == 'u':
+            _, valid = board.up()
+        elif m == 'd':
+            _, valid = board.down()
+        if not valid:
+            print("Not a valid move")
+        board.display()
+
+
     # while True:
     #     move = board.play_move()
     #     move_count += 1
