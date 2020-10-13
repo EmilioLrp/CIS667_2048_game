@@ -1,5 +1,5 @@
 import numpy as np
-# from actions import Action
+from actions import Action
 from getkey import getkey
 import random
 
@@ -11,8 +11,8 @@ class Board:
         self._init_game()
 
     def _init_game(self):
-        # action = Action()
-        # self.actions = action.get_action()
+        action = Action()
+        self.actions = action.get_action()
         # generate 2 tiles with value 2 at random position
         self._generate_rand_tile()
         self._generate_rand_tile()
@@ -23,16 +23,35 @@ class Board:
         self._game_board[tile[0][0]][tile[0][1]] = 2
 
     def valid_action(self, action):
-        pass
+
+        return False
+
+    def _get_lines(self, action):
+        """
+        Get the list of lines along the preferred direction of movement.
+        Within each line, a list of the coordinate of each grid is stored
+        :param action:
+        :return:
+        """
+        lines = []
+        if action == Action.left or action == Action.right:
+            for i in range(self._game_board.shape[0]):
+               lines.append((i,))
+        elif action == Action.up or action == Action.down:
+            pass
+        elif action == Action.downLeft or action == Action.upRight:
+            pass
+        else:
+            pass
 
     def display(self):
         print(self._game_board)
 
     def update_state(self, move):
-        if self.valid_action(action=move):
-            pass
+        pass
 
     def game_over(self):
+
         return False
 
     def play_move(self):

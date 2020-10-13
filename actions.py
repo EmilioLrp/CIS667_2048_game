@@ -6,7 +6,7 @@ class Action(Enum):
     down = "d",
     left = "l",
     right = "r",
-    upLeft = "uf",
+    upLeft = "ul",
     upRight = "ur",
     downLeft = "dl",
     downRight = "dr"
