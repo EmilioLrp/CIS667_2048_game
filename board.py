@@ -8,6 +8,9 @@ class Board:
         self._game_board = np.zeros((self._board_size, self._board_size), dtype=int)
         self._init_game()
 
+    # def test_board(self, board):
+    #     self._game_board = np.copy(board)
+
     def get_board(self):
         return self._game_board
 
@@ -22,7 +25,8 @@ class Board:
     def _generate_rand_tile(self):
         empty = np.argwhere(self._game_board == 0)
         tile = random.sample(list(empty), 1)
-        self._game_board[tile[0][0]][tile[0][1]] = 2
+        print()
+        self._game_board[tile[0][0], tile[0][1]] = 2
 
     def merge_tile(self, lines, merge_to_left=True):
         """
@@ -82,11 +86,9 @@ class Board:
                 tile = self._get_tile(line, i)
                 if tile == 0:
                     zero_index.append(i)
-                # # if a line contains 0, meaning it is not fully filled, then it must be movable
-                #     return True
                 board_line.append(tile)
             board_line = np.array(board_line)
-            if len(zero_index) != 0 and np.count_nonzero(board_line[zero_index[0]]) != 0:
+            if len(zero_index) != 0 and np.count_nonzero(board_line[zero_index[0]:]) != 0:
                 # count from the first 0, if it exists
                 # if the rest of the list contains at least 1 non zero, the line is movable
                 return True

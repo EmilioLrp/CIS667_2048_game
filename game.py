@@ -20,6 +20,9 @@ class Game:
     def display(self):
         print(self._game_board.get_board())
 
+    # def test_board(self, board):
+    #     self._game_board.test_board(board)
+
     def do_action(self, action):
         """
         First, extract lines according to user's input, within each line holds the coordinate of each tile
@@ -98,4 +101,19 @@ if __name__ == '__main__':
             print("Action Invalid!! Game board not updated!!!")
             continue
         game.do_action(action=action)
+        move_count += 1
         game.display()
+    print("Total move count to the end of game: %d" % move_count)
+    # board = np.zeros((4, 4), dtype=int)
+    # board[0, :] = [128, 512, 128, 64]
+    # board[1, :] = [64, 32, 8, 4]
+    # board[2, :] = [16, 2, 0, 0]
+    # board[3, :] = [2, 0, 0, 2]
+    # game.test_board(board)
+    # game.display()
+    # action = input("action:")
+    # if not game.valid_action(action=action):
+    #     print("Action Invalid!! Game board not updated!!!")
+    # else:
+    #     game.do_action(action=action)
+    #     game.display()
