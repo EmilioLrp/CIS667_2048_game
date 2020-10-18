@@ -27,13 +27,13 @@ class Game:
         :return:
         """
         lines = []
-        if action == Action.left.get_value() or action == Action.right.get_value():
+        if action in [Action.left.get_value(), Action.right.get_value()]:
             lines = self._get_row_lines(indexes=self._board_indedxes)
-        elif action == Action.up.get_value() or action == Action.down.get_value():
+        elif action in [Action.up.get_value(), Action.down.get_value()]:
             # a vertical operation, transpose the board, then call _get_row_lines
             index_trans = np.transpose(self._board_indedxes)
             lines = self._get_row_lines(indexes=index_trans)
-        elif action == Action.upLeft.get_value() or action == Action.downLeft.get_value():
+        elif action in [Action.upLeft.get_value(), Action.downRight.get_value()]:
             lines = self._get_diagonal_lines(indexes=self._board_indedxes)
         else:
             # a forward slash operation, flip the board vertically and call _get_diagonal_lines
