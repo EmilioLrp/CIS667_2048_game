@@ -6,10 +6,11 @@ import numpy as np
 class Game:
     def __init__(self):
         self._game_board = Board()
-        self._board_indedxes = self._game_board_indexes(self._game_board.get_size())
+        self._board_indexes = Game._game_board_indexes(self._game_board.get_size())
         self._goal = 2048
 
-    def _game_board_indexes(self, size):
+    @classmethod
+    def _game_board_indexes(cls, size):
         board_index = np.ndarray(shape=(size, size), dtype=object)
         for r in range(board_index.shape[0]):
             for c in range(board_index.shape[1]):
@@ -26,24 +27,25 @@ class Game:
         :param action:
         :return:
         """
+        lines = self._get_lines(action=action)
+
+        self._game_board.merge_tile(lines=lines, merge_to_left=Action.left_direction(action))
+
+    def _get_lines(self, action):
         lines = []
         if action in [Action.left.get_value(), Action.right.get_value()]:
-            lines = self._get_row_lines(indexes=self._board_indedxes)
+            lines = self._get_row_lines(indexes=self._board_indexes)
         elif action in [Action.up.get_value(), Action.down.get_value()]:
             # a vertical operation, transpose the board, then call _get_row_lines
-            index_trans = np.transpose(self._board_indedxes)
+            index_trans = np.transpose(self._board_indexes)
             lines = self._get_row_lines(indexes=index_trans)
         elif action in [Action.upLeft.get_value(), Action.downRight.get_value()]:
-            lines = self._get_diagonal_lines(indexes=self._board_indedxes)
+            lines = self._get_diagonal_lines(indexes=self._board_indexes)
         else:
             # a forward slash operation, flip the board vertically and call _get_diagonal_lines
-            index_flip = np.fliplr(self._board_indedxes)
+            index_flip = np.fliplr(self._board_indexes)
             lines = self._get_diagonal_lines(indexes=index_flip)
-
-        if action in [Action.up.get_value(), Action.left.get_value(), Action.upLeft.get_value(), Action.upRight.get_value()]:
-            self._game_board.merge_tile(lines=lines, merge_to_left=True)
-        else:
-            self._game_board.merge_tile(lines=lines, merge_to_left=False)
+        return lines
 
     def _get_row_lines(self, indexes):
         lines = []
@@ -63,14 +65,21 @@ class Game:
         return lines
 
     def valid_action(self, action):
-        return True
+        if action in self._valid_actions():
+            return True
+        return False
 
     def _valid_actions(self):
-        return 1
+        valid_actions = []
+        for act in Action.__members__.values():
+            lines = self._get_lines(action=act.get_value())
+            if self._game_board.movable(lines=lines, to_left=Action.left_direction(act)):
+                valid_actions.append(act.get_value())
+        return valid_actions
 
     @property
     def game_over(self):
-        if self._valid_actions() == 0:
+        if len(self._valid_actions()) == 0:
             print("you loose!!!")
             return True
         if np.any(self._game_board.get_board() == self._goal):
@@ -86,7 +95,7 @@ if __name__ == '__main__':
     while not game.game_over:
         action = input("Please input a move: ")
         if not game.valid_action(action=action):
+            print("Action Invalid!! Game board not updated!!!")
             continue
-        # @TODO update game board
         game.do_action(action=action)
         game.display()

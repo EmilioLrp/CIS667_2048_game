@@ -71,3 +71,29 @@ class Board:
         x = line[line_index][0]
         y = line[line_index][1]
         return self._game_board[x, y]
+
+    def movable(self, lines, to_left):
+        for line in lines:
+            if not to_left:
+                line = np.fliplr(line, 0)
+            board_line = []
+            zero_index = []
+            for i in range(len(line)):
+                tile = self._get_tile(line, i)
+                if tile == 0:
+                    zero_index.append(i)
+                # # if a line contains 0, meaning it is not fully filled, then it must be movable
+                #     return True
+                board_line.append(tile)
+            board_line = np.array(board_line)
+            if len(zero_index) != 0 and np.count_nonzero(board_line[zero_index[0]]) != 0:
+                # count from the first 0, if it exists
+                # if the rest of the list contains at least 1 non zero, the line is movable
+                return True
+            for i in range(len(board_line) - 1):
+                j = i + 1
+                if self._get_tile(line, i) == self._get_tile(line, j):
+                    # a sliding window
+                    # if 2 contingent tiles contains same value, then this line is movable
+                    return True
+        return False

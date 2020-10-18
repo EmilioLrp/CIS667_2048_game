@@ -18,3 +18,10 @@ class Action(Enum):
 
     def get_value(self):
         return self.value[0]
+
+    @classmethod
+    def left_direction(cls, action):
+        if action in [cls.up.get_value(), cls.left.get_value(), cls.upLeft.get_value(),
+                      cls.upRight.get_value()]:
+            return True
+        return False
