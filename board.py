@@ -75,7 +75,7 @@ class Board:
     def movable(self, lines, to_left):
         for line in lines:
             if not to_left:
-                line = np.fliplr(line, 0)
+                line = np.flip(line, 0)
             board_line = []
             zero_index = []
             for i in range(len(line)):
