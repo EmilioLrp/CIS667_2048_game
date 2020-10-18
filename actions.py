@@ -10,3 +10,6 @@ class Action(Enum):
     upRight = "ur",
     downLeft = "dl",
     downRight = "dr"
+
+    def get_value(self):
+        return self.value[0]

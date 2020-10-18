@@ -19,7 +19,7 @@ class Game:
     def display(self):
         print(self._game_board.get_board())
 
-    def update_state(self, action):
+    def do_action(self, action):
         """
         First, extract lines according to user's input, within each line holds the coordinate of each tile
         Then, move and merge tiles
@@ -27,24 +27,20 @@ class Game:
         :return:
         """
         lines = []
-        if action == Action.left or action == Action.right:
+        if action == Action.left.get_value() or action == Action.right.get_value():
             lines = self._get_row_lines(indexes=self._board_indedxes)
-        elif action == Action.up or action == Action.down:
+        elif action == Action.up.get_value() or action == Action.down.get_value():
             # a vertical operation, transpose the board, then call _get_row_lines
             index_trans = np.transpose(self._board_indedxes)
             lines = self._get_row_lines(indexes=index_trans)
-        elif action == Action.upLeft or action == Action.downLeft:
+        elif action == Action.upLeft.get_value() or action == Action.downLeft.get_value():
             lines = self._get_diagonal_lines(indexes=self._board_indedxes)
         else:
             # a forward slash operation, flip the board vertically and call _get_diagonal_lines
             index_flip = np.fliplr(self._board_indedxes)
             lines = self._get_diagonal_lines(indexes=index_flip)
-        if action in [Action.up, Action.left, Action.upLeft, Action.upRight]:
-            self._game_board.merge_tile(lines=lines, merge_to_left=True)
-        else:
-            self._game_board.merge_tile(lines=lines, merge_to_left=False)
 
-        if action in [Action.left, Action.up, Action.upRight, Action.upLeft]:
+        if action in [Action.up.get_value(), Action.left.get_value(), Action.upLeft.get_value(), Action.upRight.get_value()]:
             self._game_board.merge_tile(lines=lines, merge_to_left=True)
         else:
             self._game_board.merge_tile(lines=lines, merge_to_left=False)
@@ -59,7 +55,7 @@ class Game:
     def _get_diagonal_lines(self, indexes):
         # get the diagonal of the board first
         lines = [np.diagonal(indexes)]
-        for i in range(1, indexes.shape[0] - 2):
+        for i in range(1, indexes.shape[0] - 1):
             # shrink the board to the down left corner by 1 tile, then get its diagonal
             lines.append(np.diagonal(indexes[i:, :(indexes.shape[1] - i)]))
             # shrink the board to the up right corner by 1 tile, then get its diagonal
@@ -67,7 +63,7 @@ class Game:
         return lines
 
     def valid_action(self, action):
-        return False
+        return True
 
     def _valid_actions(self):
         return 1
@@ -92,5 +88,5 @@ if __name__ == '__main__':
         if not game.valid_action(action=action):
             continue
         # @TODO update game board
-        game.update_state(action=action)
+        game.do_action(action=action)
         game.display()

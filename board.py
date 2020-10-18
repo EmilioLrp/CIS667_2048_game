@@ -32,10 +32,17 @@ class Board:
         :param merge_to_left: controls the direction of merging
         :return:
         """
+
         for line in lines:
             if not merge_to_left:
+                # flip the line so that it performs the same as merging to the left of the array
                 line = np.flip(line, 0)
+            # move all elements in the line to the far left first
+            self._shift_line(line=line)
             for i in range(len(line) - 1):
+                if self._get_tile(line, i) == 0:
+                    break
+                # a sliding window is applied
                 j = i + 1
                 start_tile = self._get_tile(line, i)
                 end_tile = self._get_tile(line, j)
@@ -44,14 +51,23 @@ class Board:
                     self._merge_line(line, index=j)
         self._generate_rand_tile()
 
+    def _shift_line(self, line):
+        board_line = []
+        for i in line:
+            board_line.append(self._game_board[i[0], i[1]])
+        board_line = [nonZero for nonZero in board_line if nonZero != 0] + [Zero for Zero in board_line if Zero == 0]
+        for i in range(len(line)):
+            index = line[i]
+            self._game_board[index[0], index[1]] = board_line[i]
+
     def _merge_line(self, line, index):
-        for i in range(index, len(line-1)):
+        for i in range(index, len(line) - 1):
             j = i + 1
             # move each tile to the left of the line by 1
             self._game_board[line[i][0], line[i][1]] = self._game_board[line[j][0], line[j][1]]
-        self._game_board[line[len(line)-1][0], line[len(line)-1][1]] = 0
+        self._game_board[line[len(line) - 1][0], line[len(line) - 1][1]] = 0
 
     def _get_tile(self, line, line_index):
         x = line[line_index][0]
         y = line[line_index][1]
-        return self._game_board[x,y]
+        return self._game_board[x, y]
