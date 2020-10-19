@@ -6,6 +6,7 @@ class Board:
     def __init__(self):
         self._board_size = 4
         self._game_board = np.zeros((self._board_size, self._board_size), dtype=int)
+        self._total_score = 0
         self._init_game()
 
     # def test_board(self, board):
@@ -13,6 +14,9 @@ class Board:
 
     def get_board(self):
         return self._game_board
+
+    def get_score(self):
+        return self._total_score
 
     def get_size(self):
         return self._board_size
@@ -25,7 +29,7 @@ class Board:
     def _generate_rand_tile(self):
         empty = np.argwhere(self._game_board == 0)
         tile = random.sample(list(empty), 1)
-        print()
+        print("random number generated at %s" % str(tile[0]))
         self._game_board[tile[0][0], tile[0][1]] = 2
 
     def merge_tile(self, lines, merge_to_left=True):
@@ -51,7 +55,9 @@ class Board:
                 start_tile = self._get_tile(line, i)
                 end_tile = self._get_tile(line, j)
                 if start_tile == end_tile:
-                    self._game_board[line[i][0], line[i][1]] = start_tile + end_tile
+                    tile_sum = start_tile + end_tile
+                    self._game_board[line[i][0], line[i][1]] = tile_sum
+                    self._total_score += tile_sum
                     self._merge_line(line, index=j)
         self._generate_rand_tile()
 

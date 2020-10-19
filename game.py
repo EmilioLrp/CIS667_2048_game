@@ -19,6 +19,7 @@ class Game:
 
     def display(self):
         print(self._game_board.get_board())
+        print("current score: %d" % self._game_board.get_score())
 
     # def test_board(self, board):
     #     self._game_board.test_board(board)
