@@ -8,6 +8,7 @@ class Board:
         self._game_board = np.zeros((self._board_size, self._board_size), dtype=int)
         self._total_score = 0
         self._init_game()
+        self._new_pos = None # the position of the new random generated tile
 
     # def test_board(self, board):
     #     self._game_board = np.copy(board)
@@ -21,6 +22,9 @@ class Board:
     def get_size(self):
         return self._board_size
 
+    def get_new_pos(self):
+        return self._new_pos
+
     def _init_game(self):
         # generate 2 tiles with value 2 at random position
         self._generate_rand_tile()
@@ -29,7 +33,8 @@ class Board:
     def _generate_rand_tile(self):
         empty = np.argwhere(self._game_board == 0)
         tile = random.sample(list(empty), 1)
-        print("random number generated at %s" % str(tile[0]))
+        # print("random number generated at %s" % str(tile[0]))
+        self._new_pos = (tile[0][0], tile[0][1])
         self._game_board[tile[0][0], tile[0][1]] = 2
 
     def merge_tile(self, lines, merge_to_left=True):

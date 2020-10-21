@@ -21,6 +21,9 @@ class Game:
         print(self._game_board.get_board())
         print("current score: %d" % self._game_board.get_score())
 
+    def get_new_pos(self):
+        return self._game_board.get_new_pos()
+
     # def test_board(self, board):
     #     self._game_board.test_board(board)
 
@@ -104,6 +107,7 @@ if __name__ == '__main__':
         game.do_action(action=action)
         move_count += 1
         game.display()
+        print("Newly generated tile at: %s" % str(game.get_new_pos()))
     print("Total move count to the end of game: %d" % move_count)
     # board = np.zeros((4, 4), dtype=int)
     # board[0, :] = [128, 512, 128, 64]
