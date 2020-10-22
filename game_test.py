@@ -82,6 +82,16 @@ class GameTestCase(ut.TestCase):
         )
         self.assertTrue(not game.valid_action(action="4"))
 
+    def test_invalid_upper_left(self):
+        game = Game()
+        game._game_board._game_board = np.array(
+            [[8, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0]]
+        )
+        self.assertTrue(not game.valid_action(action="7"))
+
     def test_lose(self):
         game = Game()
         game._game_board._game_board = np.array(
