@@ -103,7 +103,7 @@ class Board:
                 # count from the first 0, if it exists
                 # if the rest of the list contains at least 1 non zero, the line is movable
                 return True
-            for i in range(len(board_line) - 1):
+            for i in range(len(board_line[board_line != 0]) - 1):
                 j = i + 1
                 if self._get_tile(line, i) == self._get_tile(line, j):
                     # a sliding window
