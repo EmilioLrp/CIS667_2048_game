@@ -80,7 +80,7 @@ class Game:
         valid_actions = []
         for act in Action.__members__.values():
             lines = self._get_lines(action=act.get_value())
-            if self._game_board.movable(lines=lines, to_left=Action.left_direction(act)):
+            if self._game_board.movable(lines=lines, to_left=Action.left_direction(act.get_value())):
                 valid_actions.append(act.get_value())
         return valid_actions
 
