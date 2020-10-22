@@ -7,14 +7,6 @@ import numpy as np
 
 class GameTestCase(ut.TestCase):
     
-    def print_test_case(self, expected, actual):
-        # helper method to print out failed test cases
-        print("%s failed:" % ip.currentframe().f_back.f_code.co_name)
-        print("expected:")
-        print(expected)
-        print("actual:")
-        print(actual)
-    
     def test_single(self):
         game = Game()
         game._game_board._game_board = np.array(
