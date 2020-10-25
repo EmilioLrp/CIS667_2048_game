@@ -8,6 +8,8 @@ class Game:
         self._game_board = Board()
         self._board_indexes = Game._game_board_indexes(self._game_board.get_size())
         self._goal = 2048
+        self._move_count = 0
+        self._weighted_score = 0
 
     @classmethod
     def _game_board_indexes(cls, size):
@@ -17,9 +19,18 @@ class Game:
                 board_index[r, c] = (r, c)
         return board_index
 
+    def get_move_count(self):
+        return self._move_count
+
+    def get_weighted_score(self):
+        return self._weighted_score
+
     def display(self):
         print(self._game_board.get_board())
-        print("current score: %d" % self._game_board.get_score())
+        print("current total score: %d" % self._game_board.get_score())
+        print("current move count: %d" % self._move_count)
+        print("current weighed score : %f" % self.get_weighted_score())
+        print("========================================================")
 
     def get_new_pos(self):
         return self._game_board.get_new_pos()
@@ -37,6 +48,10 @@ class Game:
         lines = self._get_lines(action=action)
 
         self._game_board.merge_tile(lines=lines, merge_to_left=Action.left_direction(action))
+
+        self._move_count += 1
+
+        self._weighted_score = float(self._game_board.get_score()) / float(self._move_count)
 
     def _get_lines(self, action):
         lines = []
@@ -86,18 +101,18 @@ class Game:
 
     @property
     def game_over(self):
-        if len(self._valid_actions()) == 0:
-            print("you loose!!!")
-            return True
         if np.any(self._game_board.get_board() == self._goal):
             print("you win !!!")
+            return True
+        if len(self._valid_actions()) == 0:
+            self._weighted_score = -1
+            print("you loose!!!")
             return True
         return False
 
 
 if __name__ == '__main__':
     game = Game()
-    move_count = 0
     game.display()
     while not game.game_over:
         action = input("Please input a move: ")
@@ -105,20 +120,6 @@ if __name__ == '__main__':
             print("Action Invalid!! Game board not updated!!!")
             continue
         game.do_action(action=action)
-        move_count += 1
-        game.display()
         print("Newly generated tile at: %s" % str(game.get_new_pos()))
-    print("Total move count to the end of game: %d" % move_count)
-    # board = np.zeros((4, 4), dtype=int)
-    # board[0, :] = [128, 512, 128, 64]
-    # board[1, :] = [64, 32, 8, 4]
-    # board[2, :] = [16, 2, 0, 0]
-    # board[3, :] = [2, 0, 0, 2]
-    # game.test_board(board)
-    # game.display()
-    # action = input("action:")
-    # if not game.valid_action(action=action):
-    #     print("Action Invalid!! Game board not updated!!!")
-    # else:
-    #     game.do_action(action=action)
-    #     game.display()
+        game.display()
+    print("Final weighted score is : %d" % game.get_weighted_score())
