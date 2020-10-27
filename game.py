@@ -7,7 +7,7 @@ class Game:
     def __init__(self):
         self._game_board = Board()
         self._board_indexes = Game._game_board_indexes(self._game_board.get_size())
-        self._goal = 2048
+        self._goal = 2**(self._game_board.get_size() + 7)
         self._move_count = 0
         self._weighted_score = 0
 
