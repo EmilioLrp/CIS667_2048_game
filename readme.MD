@@ -8,9 +8,9 @@ Specifically, it has the following modifications:
 
 ## Contributors
 
-1. [Ruipeng LIU](https://github.com/EmilioLrp) (rliu02@syr.edu)
-2. [Duhao Guo](https://github.com/frankgx97) (dguo13@syr.edu)
-3. [Qi Fang](https://github.com/mllejuly) (qfang04@syr.edu)
+* [Ruipeng LIU](https://github.com/EmilioLrp) (rliu02@syr.edu)
+* [Duhao Guo](https://github.com/frankgx97) (dguo13@syr.edu)
+* [Qi Fang](https://github.com/mllejuly) (qfang04@syr.edu)
 
 
 
