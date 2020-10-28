@@ -1,18 +1,26 @@
-# CIS 667 term proj 2048 game
+# CIS 667 Term Project: 2048 Game
 
-This project aims to implement a variant of 2048 game and later on being played using both a tree search algorithm and a machine learning algorithm.
+This project implemented an advanced version of classical game 2048 with tree search algorithm and machine learning algorithm.
+Specifically, it has the following modifications:
+* **Game Modes**: The players are allowed to swipe horizontally, vertically, and diagonally.
+* **Board Sizes**: The game board is 4x4 by default, and can be enlarged up to 50×50. The larger the game board is, the larger the game goal is. (game goal = 2 ^ (game size + 7))
 
-## Authors
 
-1. Ruipeng LIU (rliu02@syr.edu)
-2. Duhao Guo (dguo13@syr.edu)
-3. Qi Fang (qfang04@syr.edu)
+## Contributors
 
-## System requirements
+1. [Ruipeng LIU])(https://github.com/EmilioLrp) (rliu02@syr.edu)
+2. [Duhao Guo](https://github.com/frankgx97) (dguo13@syr.edu)
+3. [Qi Fang](https://github.com/mllejuly) (qfang04@syr.edu)
 
-In order to run this project, please make sure that the hosting machine having a python3 installed and be able to build a virtual environment from it. An OS of mac or linux is preferred yet still be able to run on windows only no guarantee whether the start.sh file works.
 
-## How to run
+
+## System Requirements
+
+In order to run this project, please make sure that the hosting machine having a python3 installed and be able to build a virtual environment from it. An OS of mac or linux is preferred. Yet it still can be able to run on windows only no guarantee whether the start.sh file works.
+alre
+
+
+## Environment Installation
 
 It is highly recommend running this code under a virtual environment so that this project's dependencies may not contaminating other system dependencies.
 
@@ -30,7 +38,6 @@ If that does not work for you, a sample manual setup can be seen as follows:
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-python game.py
 ```
 
 Note that these operations is executed under the same directory as all the source codes are.
@@ -39,3 +46,10 @@ There might be a situation that the dependencies failed to install due to the va
 
 1. numpy
 2. enum
+
+
+
+## Getting Started
+```
+python game.py
+```
