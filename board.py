@@ -63,7 +63,7 @@ class Board:
                     tile_sum = start_tile + end_tile
                     self._game_board[line[i][0], line[i][1]] = tile_sum
                     self._total_score += tile_sum
-                    self._merge_line(line, index=j)
+                    self._merge_line(line, start_at=j)
         self._generate_rand_tile()
 
     def _shift_line(self, line):
@@ -75,8 +75,8 @@ class Board:
             index = line[i]
             self._game_board[index[0], index[1]] = board_line[i]
 
-    def _merge_line(self, line, index):
-        for i in range(index, len(line) - 1):
+    def _merge_line(self, line, start_at):
+        for i in range(start_at, len(line) - 1):
             j = i + 1
             # move each tile to the left of the line by 1
             self._game_board[line[i][0], line[i][1]] = self._game_board[line[j][0], line[j][1]]
