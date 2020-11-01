@@ -1,18 +1,26 @@
-# CIS 667 term proj 2048 game
+# CIS 667 Term Project: 2048 Game
 
-This project aims to implement a variant of 2048 game and later on being played using both a tree search algorithm and a machine learning algorithm.
+The project implemented an advanced version of classical game 2048 with tree search and machine learning algorithm.
+Specifically, it has the following modifications:
+* **Game Mode**: Game players are allowed to swipe horizontally, vertically, and diagonally.
+* **Board Size**: The game board is 4x4 by default, and can be enlarged, which involved modification of the source code. The larger the game board is, the larger the game goal is. `game goal = 2 ^ (game size + 7)`
 
-## Authors
 
-1. Ruipeng LIU (rliu02@syr.edu)
-2. Duhao Guo (dguo13@syr.edu)
-3. Qi Fang (qfang04@syr.edu)
+## Contributors
 
-## System requirements
+* [Ruipeng LIU](https://github.com/EmilioLrp) (rliu02@syr.edu)
+* [Duhao Guo](https://github.com/frankgx97) (dguo13@syr.edu)
+* [Qi Fang](https://github.com/mllejuly) (qfang04@syr.edu)
 
-In order to run this project, please make sure that the hosting machine having a python3 installed and be able to build a virtual environment from it. An OS of mac or linux is preferred yet still be able to run on windows only no guarantee whether the start.sh file works.
 
-## How to run
+
+## System Requirements
+
+In order to run this project, please make sure that the hosting machine having a python3 installed and be able to build a virtual environment from it. An OS of mac or linux is preferred. Yet it still can be able to run on windows only no guarantee whether the start.sh file works.
+alre
+
+
+## Environment Installation & Execution
 
 It is highly recommend running this code under a virtual environment so that this project's dependencies may not contaminating other system dependencies.
 
@@ -37,5 +45,5 @@ Note that these operations is executed under the same directory as the starting 
 
 There might be a situation that the dependencies failed to install due to the variance of name and version for the same package on different OS. In that case make sure all the following packages are properly installed before running the project:
 
-1. numpy
-2. enum
+* numpy
+* enum
