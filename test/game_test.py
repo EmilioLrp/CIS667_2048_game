@@ -1,7 +1,7 @@
 import unittest as ut
 
 import numpy as np
-from src.game import Game
+from src.game.game import Game
 
 
 class GameTestCase(ut.TestCase):
@@ -94,7 +94,7 @@ class GameTestCase(ut.TestCase):
         self.assertTrue(game.game_over)
 
 
-if __name__ == "__main__":    
+def start_test():
     test_suite = ut.TestLoader().loadTestsFromTestCase(GameTestCase)
     res = ut.TextTestRunner(verbosity=2).run(test_suite)
     num, errs, fails = res.testsRun, len(res.errors), len(res.failures)
