@@ -9,7 +9,7 @@ if __name__ == '__main__':
     while True:
         mode = input(
             "please input a mode to start the game(m for manual, mcts for tree search, ml for machine learning): ")
-        if mode == "manual":
+        if mode == "m":
             manual_play()
             break
         elif mode == "mcts":
