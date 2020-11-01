@@ -1,6 +1,7 @@
-from actions import Action
-from board import Board
 import numpy as np
+from src.game.board import Board
+
+from src.game.actions import Action
 
 
 class Game:
@@ -110,16 +111,3 @@ class Game:
             return True
         return False
 
-
-if __name__ == '__main__':
-    game = Game()
-    game.display()
-    while not game.game_over:
-        action = input("Please input a move: ")
-        if not game.valid_action(action=action):
-            print("Action Invalid!! Game board not updated!!!")
-            continue
-        game.do_action(action=action)
-        print("Newly generated tile at: %s" % str(game.get_new_pos()))
-        game.display()
-    print("Final weighted score is : %d" % game.get_weighted_score())

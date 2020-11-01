@@ -1,8 +1,7 @@
-from game import Game
-from actions import Action
 import unittest as ut
-import numpy as np
 
+import numpy as np
+from src.game import Game
 
 
 class GameTestCase(ut.TestCase):

@@ -30,10 +30,10 @@ If that does not work for you, a sample manual setup can be seen as follows:
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-python game.py
+python main.py
 ```
 
-Note that these operations is executed under the same directory as all the source codes are.
+Note that these operations is executed under the same directory as the starting shell is located.
 
 There might be a situation that the dependencies failed to install due to the variance of name and version for the same package on different OS. In that case make sure all the following packages are properly installed before running the project:
 
