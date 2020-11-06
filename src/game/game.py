@@ -73,14 +73,14 @@ class Game:
             lines = self._get_diagonal_lines(indexes=index_flip)
         return lines
 
-    def _get_row_lines(self, indexes: list) -> list:
+    def _get_row_lines(self, indexes: np.ndarray) -> list:
         lines = []
         # a horizontal operation, get coordinate of each tile from each row
         for i in range(indexes.shape[0]):
             lines.append(indexes[i, :])
         return lines
 
-    def _get_diagonal_lines(self, indexes: list) -> list:
+    def _get_diagonal_lines(self, indexes: np.ndarray) -> list:
         # get the diagonal of the board first
         lines = [np.diagonal(indexes)]
         for i in range(1, indexes.shape[0] - 1):
@@ -91,11 +91,11 @@ class Game:
         return lines
 
     def valid_action(self, action: str) -> bool:
-        if action in self._valid_actions():
+        if action in self.valid_actions():
             return True
         return False
 
-    def _valid_actions(self) -> list:
+    def valid_actions(self) -> list:
         valid_actions = []
         for act in Action.__members__.values():
             lines = self._get_lines(action=act.get_value())
@@ -108,7 +108,7 @@ class Game:
         if np.any(self._game_board.get_board() == self._goal):
             print("you win !!!")
             return True
-        if len(self._valid_actions()) == 0:
+        if len(self.valid_actions()) == 0:
             self._weighted_score = -1
             print("you loose!!!")
             return True

@@ -1,6 +1,7 @@
 import test.game_test as gtest
 from src.control.manual import Manual
 from src.control.mcts import MCTS
+from src.control.play import PlayInterface
 from src.game.game import Game
 import sys
 
@@ -9,11 +10,11 @@ def unit_test():
     gtest.start_test()
 
 
-def play(mode):
+def play(mode: PlayInterface):
     game = Game()
     game.display()
     while not game.game_over:
-        action = mode.play()
+        action = mode.play(game=game)
         if not game.valid_action(action=action):
             print("Action Invalid!! Game board not updated!!!")
             continue
