@@ -20,6 +20,9 @@ class Game:
                 board_index[r, c] = (r, c)
         return board_index
 
+    def get_board(self):
+        return self._game_board
+
     def get_move_count(self):
         return self._move_count
 

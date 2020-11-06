@@ -1,28 +1,45 @@
-from src.control import manual
 import test.game_test as gtest
-
-
-def manual_play():
-    manual.play()
+from src.control.manual import Manual
+from src.control.mcts import MCTS
+from src.game.game import Game
+import sys
 
 
 def unit_test():
     gtest.start_test()
 
 
+def play(mode):
+    game = Game()
+    game.display()
+    while not game.game_over:
+        action = mode.play()
+        if not game.valid_action(action=action):
+            print("Action Invalid!! Game board not updated!!!")
+            continue
+        game.do_action(action=action)
+        print("Newly generated tile at: %s" % str(game.get_new_pos()))
+        game.display()
+    print("Final weighted score is : %d" % game.get_weighted_score())
+
+
 if __name__ == '__main__':
+    action_mode = None
     while True:
         mode = input(
             "please input a mode to start the game(m for manual, mcts for tree search, ml for machine learning): ")
         if mode == "m":
-            manual_play()
+            action_mode = Manual()
             break
         elif mode == "mcts":
+            action_mode = MCTS()
             break
-        elif mode == "ml":
-            break
+        # elif mode == "ml":
+        #     break
         elif mode == "test":
             unit_test()
-            break
+            sys.exit()
         else:
             print("Invalid!!! please input again!!!!")
+
+    play(mode=action_mode)
