@@ -16,11 +16,11 @@ class Action(Enum):
     downLeft = "1",
     downRight = "3",
 
-    def get_value(self):
+    def get_value(self) -> str:
         return self.value[0]
 
     @classmethod
-    def left_direction(cls, action):
+    def left_direction(cls, action: str) -> bool:
         if action in [cls.up.get_value(), cls.left.get_value(), cls.upLeft.get_value(),
                       cls.upRight.get_value()]:
             return True

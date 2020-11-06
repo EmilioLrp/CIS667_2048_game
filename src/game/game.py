@@ -13,20 +13,20 @@ class Game:
         self._weighted_score = 0
 
     @classmethod
-    def _game_board_indexes(cls, size):
+    def _game_board_indexes(cls, size) -> np.ndarray:
         board_index = np.ndarray(shape=(size, size), dtype=object)
         for r in range(board_index.shape[0]):
             for c in range(board_index.shape[1]):
                 board_index[r, c] = (r, c)
         return board_index
 
-    def get_board(self):
+    def get_board(self) -> Board:
         return self._game_board
 
-    def get_move_count(self):
+    def get_move_count(self) -> int:
         return self._move_count
 
-    def get_weighted_score(self):
+    def get_weighted_score(self) -> float:
         return self._weighted_score
 
     def display(self):
@@ -36,13 +36,13 @@ class Game:
         print("current weighed score : %f" % self.get_weighted_score())
         print("========================================================")
 
-    def get_new_pos(self):
+    def get_new_pos(self) -> (int, int):
         return self._game_board.get_new_pos()
 
     # def test_board(self, board):
     #     self._game_board.test_board(board)
 
-    def do_action(self, action):
+    def do_action(self, action: str):
         """
         First, extract lines according to user's input, within each line holds the coordinate of each tile
         Then, move and merge tiles
@@ -57,7 +57,7 @@ class Game:
 
         self._weighted_score = float(self._game_board.get_score()) / float(self._move_count)
 
-    def _get_lines(self, action):
+    def _get_lines(self, action: str) -> list:
         lines = []
         if action in [Action.left.get_value(), Action.right.get_value()]:
             lines = self._get_row_lines(indexes=self._board_indexes)
@@ -73,14 +73,14 @@ class Game:
             lines = self._get_diagonal_lines(indexes=index_flip)
         return lines
 
-    def _get_row_lines(self, indexes):
+    def _get_row_lines(self, indexes: list) -> list:
         lines = []
         # a horizontal operation, get coordinate of each tile from each row
         for i in range(indexes.shape[0]):
             lines.append(indexes[i, :])
         return lines
 
-    def _get_diagonal_lines(self, indexes):
+    def _get_diagonal_lines(self, indexes: list) -> list:
         # get the diagonal of the board first
         lines = [np.diagonal(indexes)]
         for i in range(1, indexes.shape[0] - 1):
@@ -90,12 +90,12 @@ class Game:
             lines.append(np.diagonal(indexes[:(indexes.shape[1] - i), i:]))
         return lines
 
-    def valid_action(self, action):
+    def valid_action(self, action: str) -> bool:
         if action in self._valid_actions():
             return True
         return False
 
-    def _valid_actions(self):
+    def _valid_actions(self) -> list:
         valid_actions = []
         for act in Action.__members__.values():
             lines = self._get_lines(action=act.get_value())
@@ -104,7 +104,7 @@ class Game:
         return valid_actions
 
     @property
-    def game_over(self):
+    def game_over(self) -> bool:
         if np.any(self._game_board.get_board() == self._goal):
             print("you win !!!")
             return True
