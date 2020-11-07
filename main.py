@@ -13,7 +13,8 @@ def unit_test():
 def play(mode: PlayInterface):
     game = Game()
     game.display()
-    while not game.game_over:
+    game_over, win = game.game_over
+    while not game_over:
         action = mode.play(game=game)
         if not game.valid_action(action=action):
             print("Action Invalid!! Game board not updated!!!")

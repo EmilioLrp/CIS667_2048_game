@@ -104,13 +104,13 @@ class Game:
         return valid_actions
 
     @property
-    def game_over(self) -> bool:
+    def game_over(self) -> (bool, bool):
         if np.any(self._game_board.get_board() == self._goal):
             print("you win !!!")
-            return True
+            return True, True
         if len(self.valid_actions()) == 0:
             self._weighted_score = -1
             print("you loose!!!")
-            return True
-        return False
+            return True, False
+        return False, False
 
