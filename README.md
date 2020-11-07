@@ -3,7 +3,7 @@
 The project implemented an advanced version of classical game 2048 with tree search and machine learning algorithm.
 Specifically, it has the following modifications:
 * **Game Mode**: Game players are allowed to swipe horizontally, vertically, and diagonally.
-* **Board Size**: The game board is 4x4 by default, and can be enlarged up to 50×50. The larger the game board is, the larger the game goal is. `game goal = 2 ^ (game size + 7)`
+* **Board Size**: The game board is 4x4 by default, and can be enlarged, which involved modification of the source code. The larger the game board is, the larger the game goal is. `game goal = 2 ^ (game size + 7)`
 
 
 ## Contributors
@@ -20,7 +20,7 @@ In order to run this project, please make sure that the hosting machine having a
 alre
 
 
-## Environment Installation
+## Environment Installation & Execution
 
 It is highly recommend running this code under a virtual environment so that this project's dependencies may not contaminating other system dependencies.
 
@@ -38,18 +38,12 @@ If that does not work for you, a sample manual setup can be seen as follows:
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+python main.py
 ```
 
-Note that these operations is executed under the same directory as all the source codes are.
+Note that these operations is executed under the same directory as the starting shell is located.
 
 There might be a situation that the dependencies failed to install due to the variance of name and version for the same package on different OS. In that case make sure all the following packages are properly installed before running the project:
 
 * numpy
 * enum
-
-
-
-## Getting Started
-```
-python game.py
-```
