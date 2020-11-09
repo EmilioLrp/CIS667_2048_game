@@ -29,6 +29,9 @@ class Game:
     def get_weighted_score(self) -> float:
         return self._weighted_score
 
+    def get_score(self) -> int:
+        return self._game_board.get_score()
+
     def display(self):
         print(self._game_board.get_board())
         print("current total score: %d" % self._game_board.get_score())
