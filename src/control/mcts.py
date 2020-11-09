@@ -24,9 +24,7 @@ class MCT:
 
 class MCTS(PlayInterface):
     def __init__(self):
-        self.total_move_scores = [0] * 8
-        self.total_move_moves = [0] * 8
-        self.total_games_done = 0
+        pass
 
     def _roll_out(self, root: MCT, depth: int = 20) -> list:
         game_over, win = root.get_game_state().game_over
@@ -54,20 +52,22 @@ class MCTS(PlayInterface):
         total_simulations = 20
         games_per_move = total_simulations // 4
 
-        self.total_move_scores = [0] * 8
-        self.total_move_moves = [0] * 8
+        valid_actions = game.valid_actions()
+
+        self.total_move_scores = [0] * len(valid_actions)
+        self.total_move_moves = [0] * len(valid_actions)
         self.total_games_done = 0
 
         #for i, mv in enumerate(['2','4','6','8']):
         print(game.valid_actions())
-        for i, mv in enumerate(['1','2','3','4','6','7','8','9']):
+        for i, mv in enumerate(valid_actions):
             for _ in range(games_per_move):
                 self._simulate_run(mv, i, game) 
 
         best_move_idx = self.total_move_scores.index(max(self.total_move_scores))
-        best_move = ['1','2','3','4','6','7','8','9'][best_move_idx]
+        best_move = valid_actions[best_move_idx]
         return best_move
-                
+
 
     def _simulate_run(self, move, i, game:Game):
         simulation = copy.deepcopy(game)
