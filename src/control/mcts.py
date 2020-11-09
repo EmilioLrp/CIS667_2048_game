@@ -1,6 +1,7 @@
 from src.game.game import Game
 from src.control.play import PlayInterface
 import copy
+import random
 
 
 class MCT:
@@ -23,7 +24,9 @@ class MCT:
 
 class MCTS(PlayInterface):
     def __init__(self):
-        pass
+        self.total_move_scores = [0] * 8
+        self.total_move_moves = [0] * 8
+        self.total_games_done = 0
 
     def _roll_out(self, root: MCT, depth: int = 20) -> list:
         game_over, win = root.get_game_state().game_over
@@ -45,9 +48,62 @@ class MCTS(PlayInterface):
 
     def play(self, game: Game):
         # create a deep copy of the current game state
-        game_copy = copy.deepcopy(game)
-        actions = game_copy.valid_actions()
-        # roll out will be based on the deep copy of the original state
-        root = MCT(game=game_copy)
-        children = self._roll_out(root=root, depth=20)
-        pass
+        return self._make_move(game)
+
+    def _make_move(self, game:Game):
+        total_simulations = 20
+        games_per_move = total_simulations // 4
+
+        self.total_move_scores = [0] * 8
+        self.total_move_moves = [0] * 8
+        self.total_games_done = 0
+
+        #for i, mv in enumerate(['2','4','6','8']):
+        print(game.valid_actions())
+        for i, mv in enumerate(['1','2','3','4','6','7','8','9']):
+            for _ in range(games_per_move):
+                self._simulate_run(mv, i, game) 
+
+        best_move_idx = self.total_move_scores.index(max(self.total_move_scores))
+        best_move = ['1','2','3','4','6','7','8','9'][best_move_idx]
+        return best_move
+                
+
+    def _simulate_run(self, move, i, game:Game):
+        simulation = copy.deepcopy(game)
+
+        if simulation.valid_action(move):
+            simulation.do_action(action=move)
+            moves = 0
+            while not game.game_over[0]:
+                # TODO
+                valid_actions = simulation.valid_actions()
+                #print(valid_actions)
+                if not valid_actions:
+                    break
+                m = random.choice(valid_actions)
+                simulation.do_action(m)
+                moves += 1
+            self.total_move_scores[i] += simulation.get_weighted_score() * moves
+            self.total_move_moves[i] += moves
+
+        self.total_games_done += 1
+        return
+
+    def _filter_valid(self, actions):
+        s = set(actions)
+        s.discard("1")
+        s.discard("3")
+        s.discard("7")
+        s.discard("9")
+        return list(s)
+
+
+        
+        
+
+
+
+
+
+
