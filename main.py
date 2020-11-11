@@ -23,7 +23,8 @@ def unit_test():
 def play(mode: PlayInterface):
     game = Game()
     game.display()
-
+    size = input("Please input a board size: ")
+    game.get_board().set_size(int(size))
     while True:
         game_over, win = game.game_over
         if game_over:
