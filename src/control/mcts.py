@@ -50,20 +50,23 @@ class MCTS(PlayInterface):
     def _make_move(self, game:Game):
         total_simulations = 20
         games_per_move = total_simulations // 4
+
         valid_actions = game.valid_actions()
 
-        scores = [0] * len(valid_actions)
-
-        #self.total_move_scores = [0] * len(valid_actions)
-
-        for i, mv in enumerate(valid_actions):
-            for _ in range(games_per_move):
-                scores[i] += self._simulate_run(mv, i, game) 
+        scores = self._calculate_random(game, valid_actions, games_per_move)
 
         best_move_idx = scores.index(max(scores))
         best_move = valid_actions[best_move_idx]
         return best_move
 
+    def _calculate_random(self, game: Game, valid_actions: list, games_per_move: int):
+
+        scores = [0] * len(valid_actions)
+
+        for i, mv in enumerate(valid_actions):
+            for _ in range(games_per_move):
+                scores[i] += self._simulate_run(mv, i, game)
+        return scores
 
     def _simulate_run(self, move, i, game:Game):
         simulation = copy.deepcopy(game)
