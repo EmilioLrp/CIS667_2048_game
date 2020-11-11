@@ -45,6 +45,7 @@ class MCTS(PlayInterface):
         valid_actions = root.get_game_state().valid_actions()
 
     def play(self, game: Game):
+        input("Press enter to continue:")
         return self._make_move(game)
 
     def _make_move(self, game:Game):

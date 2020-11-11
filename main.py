@@ -4,7 +4,19 @@ from src.control.mcts import MCTS
 from src.control.play import PlayInterface
 from src.game.game import Game
 import sys
+import time
 
+
+move_mapping = {
+    '1': 'Lower left',
+    '2': 'Down',
+    '3': 'Lower right',
+    '4': 'Left',
+    '6': 'Right',
+    '7': 'Upper left',
+    '8': 'Up',
+    '9': 'Upper right',
+}
 
 def unit_test():
     gtest.start_test()
@@ -18,10 +30,15 @@ def play(mode: PlayInterface):
         game_over, win = game.game_over
         if game_over:
             break
+        start = time.time()
         action = mode.play(game=game)
+        end = time.time()
         if not game.valid_action(action=action):
             print("Action Invalid!! Game board not updated!!!")
             continue
+        print("Time elapsed: {time} second(s), Move selected: {move} ({move_mapping})".format(
+            time=end - start, move=action, move_mapping=move_mapping[action]
+            ))
         game.do_action(action=action)
         print("Newly generated tile at: %s" % str(game.get_new_pos()))
         game.display()
