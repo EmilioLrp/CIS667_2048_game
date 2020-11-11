@@ -81,5 +81,4 @@ class MCTS(PlayInterface):
                 m = random.choice(valid_actions)
                 simulation.do_action(m)
                 moves += 1
-            #self.total_move_scores[i] += simulation.get_weighted_score() * moves
-        return simulation.get_weighted_score() * moves
+        return simulation.get_weighted_score()
