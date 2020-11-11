@@ -2,6 +2,7 @@ from src.game.game import Game
 from src.control.play import PlayInterface
 import copy
 import random
+import time
 
 
 class MCT:
@@ -44,9 +45,14 @@ class MCTS(PlayInterface):
     def _get_children(self, root: MCT):
         valid_actions = root.get_game_state().valid_actions()
 
-    def play(self, game: Game):
+    def play(self, game: Game) -> str:
         input("Press enter to continue:")
-        return self._make_move(game)
+        start = time.time()
+        action = self._make_move(game)
+        end = time.time()
+        time_elapse = end - start
+        print("MCTS timing: time consumption of determined current move is %s second" % str(time_elapse))
+        return action
 
     def _make_move(self, game:Game):
         total_simulations = 20
