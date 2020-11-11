@@ -45,26 +45,22 @@ class MCTS(PlayInterface):
         valid_actions = root.get_game_state().valid_actions()
 
     def play(self, game: Game):
-        # create a deep copy of the current game state
         return self._make_move(game)
 
     def _make_move(self, game:Game):
         total_simulations = 20
         games_per_move = total_simulations // 4
-
         valid_actions = game.valid_actions()
 
-        self.total_move_scores = [0] * len(valid_actions)
-        self.total_move_moves = [0] * len(valid_actions)
-        self.total_games_done = 0
+        scores = [0] * len(valid_actions)
 
-        #for i, mv in enumerate(['2','4','6','8']):
-        print(game.valid_actions())
+        #self.total_move_scores = [0] * len(valid_actions)
+
         for i, mv in enumerate(valid_actions):
             for _ in range(games_per_move):
-                self._simulate_run(mv, i, game) 
+                scores[i] += self._simulate_run(mv, i, game) 
 
-        best_move_idx = self.total_move_scores.index(max(self.total_move_scores))
+        best_move_idx = scores.index(max(scores))
         best_move = valid_actions[best_move_idx]
         return best_move
 
@@ -76,34 +72,11 @@ class MCTS(PlayInterface):
             simulation.do_action(action=move)
             moves = 0
             while not game.game_over[0]:
-                # TODO
                 valid_actions = simulation.valid_actions()
-                #print(valid_actions)
                 if not valid_actions:
                     break
                 m = random.choice(valid_actions)
                 simulation.do_action(m)
                 moves += 1
-            self.total_move_scores[i] += simulation.get_weighted_score() * moves
-            self.total_move_moves[i] += moves
-
-        self.total_games_done += 1
-        return
-
-    def _filter_valid(self, actions):
-        s = set(actions)
-        s.discard("1")
-        s.discard("3")
-        s.discard("7")
-        s.discard("9")
-        return list(s)
-
-
-        
-        
-
-
-
-
-
-
+            #self.total_move_scores[i] += simulation.get_weighted_score() * moves
+        return simulation.get_weighted_score() * moves
