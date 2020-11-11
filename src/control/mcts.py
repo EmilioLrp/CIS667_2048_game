@@ -75,17 +75,20 @@ class MCTS(PlayInterface):
                 scores[i] += self._simulate_run(mv, i, game)
         return scores
 
-    def _simulate_run(self, move, i, game:Game):
+    def _simulate_run(self, move, i, game:Game,  max_depth=None):
         simulation = copy.deepcopy(game)
-
         if simulation.valid_action(move):
             simulation.do_action(action=move)
             moves = 0
             while not game.game_over[0]:
+                if max_depth:
+                    if moves >= max_depth:
+                        break
                 valid_actions = simulation.valid_actions()
                 if not valid_actions:
                     break
                 m = random.choice(valid_actions)
                 simulation.do_action(m)
                 moves += 1
+
         return simulation.get_weighted_score()
