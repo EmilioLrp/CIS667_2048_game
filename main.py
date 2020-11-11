@@ -1,6 +1,6 @@
 import test.game_test as gtest
 from src.control.manual import Manual
-from src.control.mcts import MCTS
+from src.control.mcts_new import MCTSNew
 from src.control.play import PlayInterface
 from src.game.game import Game
 import sys
@@ -14,8 +14,6 @@ def play(mode: PlayInterface):
     game = Game()
     game.display()
     game_over, win = game.game_over
-    size = input("Please input a board size: ")
-    game.get_board().set_size(int(size))
     while not game_over:
         action = mode.play(game=game)
         if not game.valid_action(action=action):
@@ -36,7 +34,7 @@ if __name__ == '__main__':
             action_mode = Manual()
             break
         elif mode == "mcts":
-            action_mode = MCTS()
+            action_mode = MCTSNew()
             break
         # elif mode == "ml":
         #     break
