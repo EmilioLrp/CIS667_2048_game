@@ -25,6 +25,9 @@ class Board:
     def get_new_pos(self) -> (int, int):
         return self._new_pos
 
+    def set_size(self, size: int):
+        self._board_size = size
+
     def _init_game(self):
         # generate 2 tiles with value 2 at random position
         self._generate_rand_tile()
