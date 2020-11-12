@@ -3,8 +3,8 @@ import random
 
 
 class Board:
-    def __init__(self):
-        self._board_size = 4
+    def __init__(self, size: int = 4):
+        self._board_size = size
         self._game_board = np.zeros((self._board_size, self._board_size), dtype=int)
         self._total_score = 0
         self._init_game()
