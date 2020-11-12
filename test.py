@@ -41,4 +41,7 @@ def sub_problem(goal, game):
 if __name__ == '__main__':
     action_mode = MCTSNew()
 
-    play(mode=action_mode)
+    for i in range(20):
+        play(mode=action_mode)
+        with open(file="log.log", mode='a') as log:
+            log.write("iteration %s has complete" % str(i))
