@@ -22,9 +22,9 @@ def unit_test():
 
 
 def play(mode: PlayInterface):
-    size = input("Please input a board size: ")
+    size, goal = get_customed_size_board()
     game = Game()
-    game.init_board(size=int(size))
+    game.init_board(size=int(size), goal=int(goal))
     game.display()
     while True:
         game_over, win = game.game_over
@@ -47,6 +47,25 @@ def play(mode: PlayInterface):
     else:
         print("you loose!!!")
 
+def get_customed_size_board():
+    choice = input("please select a game question instance:\n"
+          "a: 3*3, 128\n"
+          "b: 3*3, 256\n"
+          "c: 3*3, 512\n"
+          "d: 4*4, 1024\n"
+          "e: 4*4, 2048\n")
+    if choice == "a":
+        return 3, 128
+    elif choice == "b":
+        return 3, 256
+    elif choice == "c":
+        return 3, 512
+    elif choice == "d":
+        return 4, 1024
+    elif choice == "e":
+        return 4, 2048
+    else:
+        raise BaseException
 
 if __name__ == '__main__':
     action_mode = None
