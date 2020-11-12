@@ -6,5 +6,5 @@ class Manual(PlayInterface):
     def __init__(self):
         pass
 
-    def play(self, game: Game) -> str:
-        return input("Please input a move: ")
+    def play(self, game: Game) -> (str, int):
+        return input("Please input a move: "), 1

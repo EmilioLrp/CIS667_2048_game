@@ -30,7 +30,7 @@ def play(mode: PlayInterface):
         game_over, win = game.game_over
         if game_over:
             break
-        action = mode.play(game=game)
+        action, count = mode.play(game=game)
         if not game.valid_action(action=action):
             print("Action Invalid!! Game board not updated!!!")
             continue
