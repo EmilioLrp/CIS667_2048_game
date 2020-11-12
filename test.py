@@ -29,6 +29,16 @@ def play(mode: PlayInterface):
             with open(file='2048_result.txt', mode='a') as file_2:
                 msg = "total score: %s, move count: %s, weighted: %s\n" % (game.get_board().get_score(), game.get_move_count(), game.get_weighted_score())
                 file_2.write(msg)
+    if not game.game_over[1]:
+        if np.max(game.get_board().get_board()) < 1024:
+            with open(file='1024_result.txt', mode='a') as file_1:
+                msg = "total score: %s, move count: %s, weighted: %s\n" % (game.get_board().get_score(), game.get_move_count(), game.get_weighted_score())
+                file_1.write(msg)
+
+        if np.max(game.get_board().get_board()) < 2048:
+            with open(file='2048_result.txt', mode='a') as file_2:
+                msg = "total score: %s, move count: %s, weighted: %s\n" % (game.get_board().get_score(), game.get_move_count(), game.get_weighted_score())
+                file_2.write(msg)
 
     print("Final weighted score is : %d" % game.get_weighted_score())
 
