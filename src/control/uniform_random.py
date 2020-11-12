@@ -8,4 +8,4 @@ class URand(PlayInterface):
         pass
 
     def play(self, game: Game):
-        return random.choice(game.valid_actions())
+        return random.choice(game.valid_actions()), 1

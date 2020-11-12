@@ -6,43 +6,42 @@ from src.control.play import PlayInterface
 from src.game.game import Game
 import sys
 import numpy as np
+import time
 
 
-def play(mode: PlayInterface):
+def play(mode: PlayInterface, size, goal, mode_name):
     record_sub = False
     game = Game()
-    game.init_board(size=4, goal=2048)
+    game.init_board(size=size, goal=goal)
     game.display()
+    node_count = 0
+    file_name = "%d_%d_%s_result.txt" % (size, goal, mode_name)
     while not game.game_over[0]:
-        action = mode.play(game=game)
+        action, nodes = mode.play(game=game)
         if not game.valid_action(action=action):
             print("Action Invalid!! Game board not updated!!!")
             continue
+        node_count += nodes
         game.do_action(action=action)
         print("Newly generated tile at: %s" % str(game.get_new_pos()))
-        # game.display()
-        if sub_problem(1024, game) and not record_sub:
+        game.display()
+        if sub_problem(goal, game) and not record_sub:
             record_sub = True
-            with open(file='1024_result.txt', mode='a') as file_1:
-                msg = "total score: %s, move count: %s, weighted: %s\n" % (game.get_board().get_score(), game.get_move_count(), game.get_weighted_score())
+            with open(file=file_name, mode='a') as file_1:
+                msg = "total score: %s, move count: %s, weighted: %s, node count: %s\n" % \
+                      (game.get_board().get_score(), game.get_move_count(), game.get_weighted_score(), node_count)
                 file_1.write(msg)
-
-        elif sub_problem(2048, game):
-            with open(file='2048_result.txt', mode='a') as file_2:
-                msg = "total score: %s, move count: %s, weighted: %s\n" % (game.get_board().get_score(), game.get_move_count(), game.get_weighted_score())
-                file_2.write(msg)
+                file_1.flush()
     if not game.game_over[1]:
-        if np.max(game.get_board().get_board()) < 1024:
-            with open(file='1024_result.txt', mode='a') as file_1:
-                msg = "total score: %s, move count: %s, weighted: %s\n" % (game.get_board().get_score(), game.get_move_count(), game.get_weighted_score())
+        if np.max(game.get_board().get_board()) < goal:
+            with open(file=file_name, mode='a') as file_1:
+                msg = "total score: %s, move count: %s, weighted: %s, node_count: %s\n" % \
+                      (game.get_board().get_score(), game.get_move_count(), game.get_weighted_score(), node_count)
                 file_1.write(msg)
-
-        if np.max(game.get_board().get_board()) < 2048:
-            with open(file='2048_result.txt', mode='a') as file_2:
-                msg = "total score: %s, move count: %s, weighted: %s\n" % (game.get_board().get_score(), game.get_move_count(), game.get_weighted_score())
-                file_2.write(msg)
+                file_1.flush()
 
     print("Final weighted score is : %d" % game.get_weighted_score())
+    print("Total nodes generated: %d" % node_count)
 
 
 def sub_problem(goal, game):
@@ -52,9 +51,20 @@ def sub_problem(goal, game):
 
 
 if __name__ == '__main__':
-    action_mode = MCTSNew()
+    # start = time.time()
+    action_mode = URand()
 
-    for i in range(20):
-        play(mode=action_mode)
-        with open(file="log.log", mode='a') as log:
-            log.write("iteration %s has complete" % str(i))
+    rand_modes = [(3, 128, "rand"), (3, 256, "rand"), (3, 512, "rand"), (4, 1024, "rand"), (4, 2048, "rand")]
+    mcts_modes = [(3, 128, "mcts"), (3, 256, "mcts"), (3, 512, "mcts"), (4, 1024, "mcts"), (4, 2048, "mcts")]
+
+    # for size, goal, name in rand_modes:
+    #     for i in range(100):
+    #         play(mode=action_mode, size=size, goal=goal, mode_name=name)
+
+    action_mode = MCTSNew()
+    for size, goal, name in mcts_modes:
+        for i in range(20):
+            play(mode=action_mode, size=size, goal=goal, mode_name=name)
+            # with open(file="log.log", mode='a') as log:
+            #     log.write("iteration %s has complete" % str(i))
+    # print(time.time() - start)

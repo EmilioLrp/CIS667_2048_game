@@ -5,7 +5,6 @@ import numpy as np
 import random
 import time
 
-
 class MCT(object):
     def __init__(self, action: str = None):
         # self._root_state = game
@@ -70,48 +69,54 @@ class MCTSNew(PlayInterface):
     def __init__(self):
         pass
 
-    def _roll_out(self, root: MCT, state: Game, depth: int = 5) -> MCT:
+    def _roll_out(self, root: MCT, state: Game, depth: int = 5) -> (MCT, int):
         root.inc_move_count()
         game_over, win = state.game_over
         # game_over, win = root.get_game_state().game_over
         # root.inc_move_count()
         if game_over or depth == 0:
             root.update_total_score(score=state.get_weighted_score())
-            return root
+            return root, 1
         all_actions = state.valid_actions()
-        actions = random.sample(all_actions, min(4, len(all_actions)))
+        # actions = random.sample(all_actions, min(4, len(all_actions)))
+        actions = random.choice(all_actions)
+        nodes = 1
         for move in actions:
             child = MCT(move)
             child_state = copy.deepcopy(state)
             child_state.do_action(move)
             child = root.set_child(child)
-            child = self._roll_out(root=child, state=child_state, depth=depth - 1)
+            child, node_count = self._roll_out(root=child, state=child_state, depth=depth - 1)
+            nodes += node_count
             root.update_total_score(root.get_total_score() + child.get_total_score())
             self._calculate_score(root)
-        return root
+        return root, nodes
 
-    def play(self, game: Game) -> str:
+    def play(self, game: Game) -> (str, int):
         start = time.time()
-        move = self._play(game)
+        move, nodes = self._play(game)
         end = time.time()
+        print("current node is %s" % str(nodes))
         print("roll out time: %s" % str(end - start))
-        return move
+        return move, nodes
 
     def _play(self, game:Game):
         # roll out will be based on the deep copy of the original state
         actions = game.valid_actions()
         action_child_pair = {}
+        node_count = 0
         for move in actions:
             # create a deep copy of the current game state
             game_copy = copy.deepcopy(game)
             game_copy.do_action(action=move)
             root_child = MCT(action=move)
             for _ in range(1):
-                root_child = self._roll_out(root=root_child, state=game_copy, depth=5)
+                root_child, nodes = self._roll_out(root=root_child, state=game_copy, depth=5)
+                node_count += nodes
             action_child_pair[move] = root_child
         max_score = np.max([child.get_score() for child in action_child_pair.values()])
         candidates = [action for action, node in action_child_pair.items() if node.get_score() == max_score]
-        return random.choice(candidates)
+        return random.choice(candidates), nodes
 
     def _calculate_score(self, node: MCT):
         # move_count = node.get_move_count()
