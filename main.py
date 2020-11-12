@@ -51,7 +51,7 @@ def get_customed_size_board():
     choice = input("please select a game question instance:\n"
           "a: 3*3, 128\n"
           "b: 3*3, 256\n"
-          "c: 3*3, 512\n"
+          "c: 4*4, 512\n"
           "d: 4*4, 1024\n"
           "e: 4*4, 2048\n")
     if choice == "a":
@@ -59,7 +59,7 @@ def get_customed_size_board():
     elif choice == "b":
         return 3, 256
     elif choice == "c":
-        return 3, 512
+        return 4, 512
     elif choice == "d":
         return 4, 1024
     elif choice == "e":
