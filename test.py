@@ -10,6 +10,7 @@ import numpy as np
 
 def play(mode: PlayInterface):
     game = Game()
+    game.init_board(size=4, goal=2048)
     game.display()
     while not game.game_over[0]:
         action = mode.play(game=game)
