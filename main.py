@@ -5,22 +5,38 @@ from src.control.play import PlayInterface
 from src.game.game import Game
 import sys
 
+move_mapping = {
+    '1': 'Lower left',
+    '2': 'Down',
+    '3': 'Lower right',
+    '4': 'Left',
+    '6': 'Right',
+    '7': 'Upper left',
+    '8': 'Up',
+    '9': 'Upper right',
+}
 
 def unit_test():
     gtest.start_test()
 
 
 def play(mode: PlayInterface):
-    game = Game()
-    game.display()
-    game_over, win = game.game_over
     size = input("Please input a board size: ")
-    game.get_board().set_size(int(size))
-    while not game_over:
+    game = Game()
+    game.init_board(size=int(size))
+    game.display()
+    while True:
+        game_over, win = game.game_over
+        if game_over:
+            break
         action = mode.play(game=game)
         if not game.valid_action(action=action):
             print("Action Invalid!! Game board not updated!!!")
             continue
+        # print("Time elapsed: {time} second(s), Move selected: {move} ({move_mapping})".format(
+        #     time=end - start, move=action, move_mapping=move_mapping[action]
+        #     ))
+        print("Move that has been decided: %s" % move_mapping[action])
         game.do_action(action=action)
         print("Newly generated tile at: %s" % str(game.get_new_pos()))
         game.display()
