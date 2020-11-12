@@ -1,4 +1,5 @@
 import numpy as np
+import math
 from src.game.board import Board
 
 from src.game.actions import Action
@@ -8,7 +9,7 @@ class Game:
     def __init__(self):
         self._game_board = Board()
         self._board_indexes = Game._game_board_indexes(self._game_board.get_size())
-        self._goal = 32
+        self._goal = 2 ** (self._game_board.get_size() + 7)
         self._move_count = 0
         self._weighted_score = 0
 
@@ -55,7 +56,7 @@ class Game:
 
         self._move_count += 1
 
-        self._weighted_score = float(self._game_board.get_score()) / float(self._move_count)
+        self._weighted_score = float(self._game_board.get_score()) / math.log(float(self._move_count), 2.)
 
     def _get_lines(self, action: str) -> list:
         lines = []
@@ -106,11 +107,9 @@ class Game:
     @property
     def game_over(self) -> (bool, bool):
         if np.any(self._game_board.get_board() == self._goal):
-            print("you win !!!")
             return True, True
         if len(self.valid_actions()) == 0:
             self._weighted_score = -1
-            print("you loose!!!")
             return True, False
         return False, False
 

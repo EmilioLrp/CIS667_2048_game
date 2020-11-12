@@ -3,6 +3,7 @@ from src.control.play import PlayInterface
 import copy
 import numpy as np
 import random
+import time
 
 
 class MCT(object):
@@ -77,7 +78,8 @@ class MCTSNew(PlayInterface):
         if game_over or depth == 0:
             root.update_total_score(score=state.get_weighted_score())
             return root
-        actions = random.choices(state.valid_actions(), k=4)
+        all_actions = state.valid_actions()
+        actions = random.sample(all_actions, min(4, len(all_actions)))
         for move in actions:
             child = MCT(move)
             child_state = copy.deepcopy(state)
@@ -89,8 +91,14 @@ class MCTSNew(PlayInterface):
         return root
 
     def play(self, game: Game) -> str:
+        start = time.time()
+        move = self._play(game)
+        end = time.time()
+        print("roll out time: %s" % str(end - start))
+        return move
+
+    def _play(self, game:Game):
         # roll out will be based on the deep copy of the original state
-        root_p = MCT()
         actions = game.valid_actions()
         action_child_pair = {}
         for move in actions:
@@ -98,9 +106,7 @@ class MCTSNew(PlayInterface):
             game_copy = copy.deepcopy(game)
             game_copy.do_action(action=move)
             root_child = MCT(action=move)
-            # root_p.set_child(child=root_child)
-            # root_child.set_parent(parent=root_p)
-            for _ in range(5):
+            for _ in range(1):
                 root_child = self._roll_out(root=root_child, state=game_copy, depth=5)
             action_child_pair[move] = root_child
         max_score = np.max([child.get_score() for child in action_child_pair.values()])
@@ -108,5 +114,6 @@ class MCTSNew(PlayInterface):
         return random.choice(candidates)
 
     def _calculate_score(self, node: MCT):
-        move_count = node.get_move_count()
-        node.set_score(-move_count)
+        # move_count = node.get_move_count()
+        # node.set_score(-move_count)
+        node.set_score(node.get_total_score())

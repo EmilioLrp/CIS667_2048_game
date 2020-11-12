@@ -1,6 +1,7 @@
 import test.game_test as gtest
 from src.control.manual import Manual
 from src.control.mcts_new import MCTSNew
+from src.control.uniform_random import URand
 from src.control.play import PlayInterface
 from src.game.game import Game
 import sys
@@ -13,8 +14,7 @@ def unit_test():
 def play(mode: PlayInterface):
     game = Game()
     game.display()
-    game_over, win = game.game_over
-    while not game_over:
+    while not game.game_over[0]:
         action = mode.play(game=game)
         if not game.valid_action(action=action):
             print("Action Invalid!! Game board not updated!!!")
@@ -23,6 +23,10 @@ def play(mode: PlayInterface):
         print("Newly generated tile at: %s" % str(game.get_new_pos()))
         game.display()
     print("Final weighted score is : %d" % game.get_weighted_score())
+    if game.game_over[1]:
+        print("you win !!!")
+    else:
+        print("you loose!!!")
 
 
 if __name__ == '__main__':
@@ -38,6 +42,9 @@ if __name__ == '__main__':
             break
         # elif mode == "ml":
         #     break
+        elif mode == "urand":
+            action_mode = URand()
+            break
         elif mode == "test":
             unit_test()
             sys.exit()
