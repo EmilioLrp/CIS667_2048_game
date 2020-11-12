@@ -9,6 +9,7 @@ import numpy as np
 
 
 def play(mode: PlayInterface):
+    record_sub = False
     game = Game()
     game.init_board(size=4, goal=2048)
     game.display()
@@ -20,7 +21,8 @@ def play(mode: PlayInterface):
         game.do_action(action=action)
         print("Newly generated tile at: %s" % str(game.get_new_pos()))
         # game.display()
-        if sub_problem(1024, game):
+        if sub_problem(1024, game) and not record_sub:
+            record_sub = True
             with open(file='1024_result.txt', mode='a') as file_1:
                 msg = "total score: %s, move count: %s, weighted: %s\n" % (game.get_board().get_score(), game.get_move_count(), game.get_weighted_score())
                 file_1.write(msg)
