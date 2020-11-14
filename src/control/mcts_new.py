@@ -114,7 +114,7 @@ class MCTSNew(PlayInterface):
                 root_child, nodes = self._roll_out(root=root_child, state=game_copy, depth=5)
                 node_count += nodes
             action_child_pair[move] = root_child
-        max_score = np.max([child.get_score() for child in action_child_pair.values()])
+            max_score = np.max([child.get_score() for child in action_child_pair.values()])
         candidates = [action for action, node in action_child_pair.items() if node.get_score() == max_score]
         return random.choice(candidates), nodes
 

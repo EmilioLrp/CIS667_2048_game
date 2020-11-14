@@ -71,7 +71,7 @@ if __name__ == '__main__':
     action_mode = None
     while True:
         mode = input(
-            "please input a mode to start the game(m for manual, mcts for tree search, ml for machine learning): ")
+            "please input a mode to start the game(m for manual, mcts for tree search, urand for universal random ml for machine learning): ")
         if mode == "m":
             action_mode = Manual()
             break
