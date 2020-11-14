@@ -8,4 +8,8 @@ class URand(PlayInterface):
         pass
 
     def play(self, game: Game):
+        input("Press Enter to continue:")
+        return self.play_game(game=game)
+
+    def play_game(self, game: Game):
         return random.choice(game.valid_actions()), 1
