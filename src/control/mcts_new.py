@@ -4,6 +4,9 @@ import copy
 import numpy as np
 import random
 import time
+import sys
+
+sys.setrecursionlimit(4000)
 
 
 class MCT(object):
@@ -70,14 +73,17 @@ class MCTSNew(PlayInterface):
     def __init__(self):
         pass
 
-    def _roll_out(self, root: MCT, state: Game, depth=5) -> (MCT, int):
+    def roll_out(self, root: MCT, state: Game, depth=5) -> (MCT, int):
         root.inc_move_count()
         game_over, win = state.game_over
-        # game_over, win = root.get_game_state().game_over
-        # root.inc_move_count()
-        if game_over or depth <= 0:
-            root.update_total_score(score=state.get_weighted_score())
-            return root, 1
+        if depth is None:
+            if game_over:
+                root.update_total_score(score=state.get_weighted_score())
+                return root, 1
+        else:
+            if game_over or depth <= 0:
+                root.update_total_score(score=state.get_weighted_score())
+                return root, 1
 
         child_depth = None
         if depth:
@@ -94,7 +100,7 @@ class MCTSNew(PlayInterface):
         max_indices = self.choose_child(child_states, states_score)
         child_id = random.choice(max_indices)
         child = MCT(all_actions[child_id])
-        child, node_count = self._roll_out(root=child, state=child_states[child_id], depth=child_depth)
+        child, node_count = self.roll_out(root=child, state=child_states[child_id], depth=child_depth)
         root.set_child(child)
         nodes += node_count
         root.update_total_score(root.get_total_score() + child.get_total_score())
@@ -129,7 +135,7 @@ class MCTSNew(PlayInterface):
             game_copy.do_action(action=move)
             root_child = MCT(action=move)
             for _ in range(1):
-                root_child, nodes = self._roll_out(root=root_child, state=game_copy, depth=10)
+                root_child, nodes = self.roll_out(root=root_child, state=game_copy, depth=10)
                 node_count += nodes
             action_child_pair[move] = root_child
             max_score = np.max([child.get_score() for child in action_child_pair.values()])
