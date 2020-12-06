@@ -5,6 +5,7 @@ import numpy as np
 import random
 import time
 
+
 class MCT(object):
     def __init__(self, action: str = None):
         # self._root_state = game
@@ -69,27 +70,44 @@ class MCTSNew(PlayInterface):
     def __init__(self):
         pass
 
-    def _roll_out(self, root: MCT, state: Game, depth: int = 5) -> (MCT, int):
+    def _roll_out(self, root: MCT, state: Game, depth=5) -> (MCT, int):
         root.inc_move_count()
         game_over, win = state.game_over
         # game_over, win = root.get_game_state().game_over
         # root.inc_move_count()
-        if game_over or depth == 0:
+        if game_over or depth <= 0:
             root.update_total_score(score=state.get_weighted_score())
             return root, 1
+
+        child_depth = None
+        if depth:
+            child_depth = depth - 1
         all_actions = state.valid_actions()
-        # actions = random.sample(all_actions, min(4, len(all_actions)))
-        actions = random.choice(all_actions)
-        nodes = 1
-        for move in actions:
-            child = MCT(move)
+        nodes = len(all_actions)
+        child_states = []
+        states_score = []
+        for action in all_actions:
             child_state = copy.deepcopy(state)
-            child_state.do_action(move)
-            child = root.set_child(child)
-            child, node_count = self._roll_out(root=child, state=child_state, depth=depth - 1)
-            nodes += node_count
-            root.update_total_score(root.get_total_score() + child.get_total_score())
-            self._calculate_score(root)
+            child_state.do_action(action)
+            child_states.append(child_state)
+            states_score.append(child_state.get_weighted_score())
+        max_indices = self.choose_child(child_states, states_score)
+        child_id = random.choice(max_indices)
+        child = MCT(all_actions[child_id])
+        child, node_count = self._roll_out(root=child, state=child_states[child_id], depth=child_depth)
+        root.set_child(child)
+        nodes += node_count
+        root.update_total_score(root.get_total_score() + child.get_total_score())
+        # actions = random.choice(all_actions)
+        # for move in actions:
+        #     child = MCT(move)
+        #     child_state = copy.deepcopy(state)
+        #     child_state.do_action(move)
+        #     child = root.set_child(child)
+        #     child, node_count = self._roll_out(root=child, state=child_state, depth=depth - 1)
+        #     nodes += node_count
+        #     root.update_total_score(root.get_total_score() + child.get_total_score())
+        #     self._calculate_score(root)
         return root, nodes
 
     def play(self, game: Game) -> (str, int):
@@ -100,7 +118,7 @@ class MCTSNew(PlayInterface):
         print("roll out time: %s" % str(end - start))
         return move, nodes
 
-    def _play(self, game:Game):
+    def _play(self, game: Game):
         # roll out will be based on the deep copy of the original state
         actions = game.valid_actions()
         action_child_pair = {}
@@ -111,14 +129,19 @@ class MCTSNew(PlayInterface):
             game_copy.do_action(action=move)
             root_child = MCT(action=move)
             for _ in range(1):
-                root_child, nodes = self._roll_out(root=root_child, state=game_copy, depth=5)
+                root_child, nodes = self._roll_out(root=root_child, state=game_copy, depth=10)
                 node_count += nodes
             action_child_pair[move] = root_child
             max_score = np.max([child.get_score() for child in action_child_pair.values()])
         candidates = [action for action, node in action_child_pair.items() if node.get_score() == max_score]
-        return random.choice(candidates), nodes
+        return random.choice(candidates), node_count
 
-    def _calculate_score(self, node: MCT):
-        # move_count = node.get_move_count()
-        # node.set_score(-move_count)
-        node.set_score(node.get_total_score())
+    # def _calculate_score(self, node: MCT):
+    #     # move_count = node.get_move_count()
+    #     # node.set_score(-move_count)
+    #     node.set_score(node.get_total_score())
+
+    def choose_child(self, child_states, scores):
+        max_score = np.max(scores)
+        positions = np.concatenate(np.argwhere(np.array(scores) == max_score), axis=0)
+        return positions
