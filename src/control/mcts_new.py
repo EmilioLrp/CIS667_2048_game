@@ -105,16 +105,6 @@ class MCTSNew(PlayInterface):
         nodes += node_count
         root.update_total_score(root.get_total_score() + child.get_total_score())
         self._calculate_score(root)
-        # actions = random.choice(all_actions)
-        # for move in actions:
-        #     child = MCT(move)
-        #     child_state = copy.deepcopy(state)
-        #     child_state.do_action(move)
-        #     child = root.set_child(child)
-        #     child, node_count = self._roll_out(root=child, state=child_state, depth=depth - 1)
-        #     nodes += node_count
-        #     root.update_total_score(root.get_total_score() + child.get_total_score())
-        #     self._calculate_score(root)
         return root, nodes
 
     def play(self, game: Game) -> (str, int):

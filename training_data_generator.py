@@ -25,6 +25,8 @@ def data_generator(size, goal):
     # list of desired output after softmax
     desired_output = []
     # count = 100
+    # @TODO line by line wrote?
+    # @TODO multiple iteration?
     while True:
         game_over, win = game.game_over
         if game_over:
