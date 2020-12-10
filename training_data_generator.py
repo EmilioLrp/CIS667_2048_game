@@ -24,9 +24,7 @@ def data_generator(size, goal):
     # list of desired output after softmax
     desired_output = []
     # count = 100
-    # @TODO line by line wrote?
-    # @TODO multiple iteration?
-    for _ in range(3):
+    while len(state_data) < 4000:
         game = Game()
         game.init_board(size=size, goal=goal)
         while not game.game_over[0]:

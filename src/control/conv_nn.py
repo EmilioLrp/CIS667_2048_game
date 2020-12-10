@@ -33,7 +33,7 @@ def loss_function(y, y_des):
 
 def calculate_loss(model, xs, ys_des):
     loss = 0.
-    for i in range(len(x)):
+    for i in range(len(xs)):
         input = xs[i]
         label = ys_des[i]
         out = model(input)
@@ -57,23 +57,3 @@ def train(model, optimizer, input, des_output):
     return y_train, loss_train
 
 
-if __name__ == '__main__':
-    size = 4
-    file1 = "/Users/emilioliu/Personal/learning/master/yr1/sem1/CIS667_AI/proj/code/CIS667_2048_game/data/board_size_%d_train.dat" % size
-    with open(file1, 'rb') as f1:
-        (x, y) = pickle.load(f1)
-
-    y = [tr.tensor(j).float() for j in y]
-    x = [tr.tensor(i).reshape((1, 1, size, size)).float() for i in x]
-
-    print(y)
-    model = NNModel(size)
-    optim = tr.optim.Adam(model.parameters())
-    for epoch in range(5000):
-        for i in range(len(x)):
-            input = x[i]
-            output = y[i]
-            train(model, optim, x[i], y[i])
-
-        loss = calculate_loss(model, x, y)
-        print(loss)
