@@ -5,7 +5,7 @@ import os
 import numpy as np
 
 
-def shuffle_data(x, y):
+def shuffle_data(size, x, y):
     shuffle = np.random.permutation(range(len(x)))
     split = int(len(x) / 10)
     train, test = shuffle[:-split], shuffle[-split:]
@@ -28,7 +28,7 @@ def train(size):
     with open(file1, 'rb') as f1:
         (x, y) = pickle.load(f1)
 
-    x_train, x_test, y_train, y_test = shuffle_data(x, y)
+    x_train, x_test, y_train, y_test = shuffle_data(size, x, y)
     model = conv_nn.NNModel(size)
     optim = tr.optim.Adam(model.parameters())
     for epoch in range(50000):
@@ -39,8 +39,8 @@ def train(size):
 
         train_loss = conv_nn.calculate_loss(model, x_train, y_train)
         test_loss = conv_nn.calculate_loss(model, x_test, y_test)
-        train_loss_str = "epoch: %d, loss: %d" % (epoch, train_loss)
-        test_loss_str = "epoch: %d, loss: %d" % (epoch, test_loss)
+        train_loss_str = "epoch: %d, loss: %s\n" % (epoch, str(train_loss))
+        test_loss_str = "epoch: %d, loss: %s\n" % (epoch, str(test_loss))
 
         with open(train_error_file, 'a') as f1:
             f1.write(train_loss_str)
@@ -56,7 +56,7 @@ def train(size):
 
 
 if __name__ == '__main__':
-    size = [3, 4]
-    for s in size:
+    board_size = [3, 4]
+    for s in board_size:
         train(s)
         print("size %d train done" % s)
