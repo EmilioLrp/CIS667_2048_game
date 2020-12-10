@@ -20,8 +20,7 @@ def shuffle_data(x, y):
     return x_train, x_test, y_train, y_test
 
 
-if __name__ == '__main__':
-    size = 3
+def train(size):
     file1 = os.path.dirname(os.path.abspath(__file__)) + "/data/board_size_%d_train.dat" % size
     model_file = os.path.dirname(os.path.abspath(__file__)) + "/model/board_size_%d_model.mod" % size
     train_error_file = "train_error.txt"
@@ -32,7 +31,7 @@ if __name__ == '__main__':
     x_train, x_test, y_train, y_test = shuffle_data(x, y)
     model = conv_nn.NNModel(size)
     optim = tr.optim.Adam(model.parameters())
-    for epoch in range(1000):
+    for epoch in range(50000):
         for i in range(len(x_train)):
             input = x_train[i]
             output = y_train[i]
@@ -50,6 +49,14 @@ if __name__ == '__main__':
         with open(test_error_file, 'a') as f2:
             f2.write(test_loss_str)
             f2.flush()
-        # print("train loss: %f, test loss: %f" % (train_loss, test_loss))
+            # print("train loss: %f, test loss: %f" % (train_loss, test_loss))
+        print("size %d epoch %d train done" % (size, epoch))
 
     tr.save(model.state_dict(), model_file)
+
+
+if __name__ == '__main__':
+    size = [3, 4]
+    for s in size:
+        train(s)
+        print("size %d train done" % s)
