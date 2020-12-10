@@ -17,8 +17,7 @@ import pickle as pk
 
 def data_generator(size, goal):
     mcts = MCTSNew()
-    game = Game()
-    game.init_board(size=size, goal=goal)
+
     file_name = os.path.dirname(os.path.abspath(__file__)) + "/data/board_size_%d_train.dat" % size
     # list of game states
     state_data = []
@@ -27,30 +26,34 @@ def data_generator(size, goal):
     # count = 100
     # @TODO line by line wrote?
     # @TODO multiple iteration?
-    while True:
-        game_over, win = game.game_over
-        if game_over:
-            break
-        state_data.append(game.get_board().get_board())
-        actions_dict = dict([(act.get_value(), 0.) for act in Action.__members__.values()])
-        actions = game.valid_actions()
+    for _ in range(3):
+        game = Game()
+        game.init_board(size=size, goal=goal)
+        while not game.game_over[0]:
+            # game_over, win = game.game_over
+            # if game_over:
+            #     break
+            state_data.append(game.get_board().get_board())
+            actions_dict = dict([(act.get_value(), 0.) for act in Action.__members__.values()])
+            actions = game.valid_actions()
 
-        action_child_pair = {}
-        for move in actions:
-            state = copy.deepcopy(game)
-            root_child = MCT(state=state)
-            root_child, _ = mcts.roll_out(root=root_child, state=state, depth=None)
-            actions_dict[move] = root_child.get_game_state().get_weighted_score()
-            action_child_pair[move] = root_child
-            max_score = np.max([child.get_score() for child in action_child_pair.values()])
-        candidates = [action for action, node in action_child_pair.items() if node.get_score() == max_score]
+            action_child_pair = {}
+            for move in actions:
+                state = copy.deepcopy(game)
+                root_child = MCT(state=state)
+                root_child, _ = mcts.roll_out(root=root_child, state=state, depth=None)
+                actions_dict[
+                    move] = root_child.get_game_state().get_weighted_score() + 2  # for normalizing -1 to 1, differentiating 0
+                action_child_pair[move] = root_child
+                max_score = np.max([child.get_score() for child in action_child_pair.values()])
+            candidates = [action for action, node in action_child_pair.items() if node.get_score() == max_score]
 
-        action_scores = 1 + np.array(list(actions_dict.values()))
-        softmax_scores = [score/np.sum(action_scores) for score in action_scores]
-        desired_output.append(softmax_scores)
+            action_scores = np.array(list(actions_dict.values()))
+            softmax_scores = [score / np.sum(action_scores) for score in action_scores]
+            desired_output.append(softmax_scores)
 
-        game.do_action(random.choice(candidates))
-        # count -= 1
+            game.do_action(random.choice(candidates))
+            # count -= 1
 
     with open(file_name, "wb") as f:
         pk.dump((state_data, desired_output), f)
@@ -63,4 +66,3 @@ if __name__ == '__main__':
         print("Starting to generate data for game size %d" % size)
         data_generator(size, goal)
         print("Complete generating data")
-
