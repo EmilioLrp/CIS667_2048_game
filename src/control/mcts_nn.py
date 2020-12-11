@@ -19,12 +19,13 @@ class MCTS_NN(PlayInterface):
     def __init__(self, game_size):
         self._size = game_size
         self._model = self._load_nn()
-        self._action = [act.value() for act in Action.__members__.values()]
+        self._action = [act.get_value() for act in Action.__members__.values()]
 
     def _load_nn(self):
         model = NNModel(self._size)
-        model_file = os.path.dirname("main.py") + "/model/board_size_%d_model.mod" % self._size
+        model_file = os.path.abspath(os.getcwd()) + "/model/board_size_%d_model.mod" % self._size
         model.load_state_dict(tr.load(model_file))
+        return model
 
     def roll_out(self, root: MCT, state: Game, depth=5) -> (MCT, int):
         root.inc_move_count()
@@ -41,7 +42,7 @@ class MCTS_NN(PlayInterface):
         child_depth = None
         if depth:
             child_depth = depth - 1
-        all_actions = self._action_selection(state=state)
+        all_actions = self._action_selection(state=state, size=self._size)
         nodes = len(all_actions)
         child_states = []
         states_score = []
@@ -60,28 +61,33 @@ class MCTS_NN(PlayInterface):
         self._calculate_score(root)
         return root, nodes
 
-    def _action_selection(self, state):
+    def _action_selection(self, state, size):
         all_act = state.valid_actions()
-        model_out = self._model(tr.tensor(state.get_board().get_board())).reshape(
-            (1, 1, self._size, self._size)).float()
-        model_map = dict(list(zip(range(len(model_out)), model_out)))
+        x = tr.tensor(state.get_board().get_board()).reshape((1, 1, size, size)).float()
+        model_out = self._model.forward(x).detach().numpy()[0]
+        model_map = dict(list(zip(self._action, model_out)))
+        # filter out impossibilities by the model
         model_map = {x: y for x, y in model_map.items() if y != 0}
+        # filter out remain actions that is not valid
+        model_map = {x: y for x, y in model_map.items() if all_act.__contains__(x)}
         model_act = []
         for _ in range(3):
-            if bool(model_map):
+            if not bool(model_map):
                 break
-            max_move = max(model_map.items(), key=operator.itemgetter(1))
+            max_move = max(model_map.items(), key=operator.itemgetter(1))[0]
             model_act.append(max_move)
             del model_map[max_move]
-        moves = [self._action[i] for i in model_act]
-        result = [act for act in moves if act in all_act]
-        if bool(result):
-            return all_act
+        if len(model_act) > 0:
+            model_act = [str(act) for act in model_act]
+            return model_act
         else:
-            return result
+            return all_act
 
+    def play(self, game: Game):
+        input("Press Enter to continue:")
+        return self.play_auto(game)
 
-    def play(self, game: Game) -> (str, int):
+    def play_auto(self, game: Game) -> (str, int):
         start = time.time()
         move, nodes = self._play(game)
         end = time.time()
