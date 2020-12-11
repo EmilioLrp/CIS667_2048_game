@@ -23,15 +23,15 @@ def shuffle_data(size, x, y):
 def train(size):
     file1 = os.path.dirname(os.path.abspath(__file__)) + "/data/board_size_%d_train.dat" % size
     model_file = os.path.dirname(os.path.abspath(__file__)) + "/model/board_size_%d_model.mod" % size
-    train_error_file = "train_error.txt"
-    test_error_file = "test_error.txt"
+    train_error_file = "size_%d_train_error.txt" % size
+    test_error_file = "size_%d_test_error.txt" % size
     with open(file1, 'rb') as f1:
         (x, y) = pickle.load(f1)
 
     x_train, x_test, y_train, y_test = shuffle_data(size, x, y)
     model = conv_nn.NNModel(size)
     optim = tr.optim.Adam(model.parameters())
-    for epoch in range(50000):
+    for epoch in range(1000):
         for i in range(len(x_train)):
             input = x_train[i]
             output = y_train[i]
