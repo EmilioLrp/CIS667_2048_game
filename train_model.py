@@ -3,7 +3,7 @@ import src.control.conv_nn as conv_nn
 import torch as tr
 import os
 import numpy as np
-
+import time
 
 def shuffle_data(size, x, y):
     shuffle = np.random.permutation(range(len(x)))
@@ -32,7 +32,8 @@ def train(size, goal):
     model = conv_nn.NNModel(size)
     optim = tr.optim.Adam(model.parameters())
     # optim = tr.optim.Adamax(model.parameters())
-    for epoch in range(100):
+    for epoch in range(1000):
+        start = time.time()
         for i in range(len(x_train)):
             input = x_train[i]
             output = y_train[i]
@@ -50,7 +51,8 @@ def train(size, goal):
         with open(test_error_file, 'a') as f2:
             f2.write(test_loss_str)
             f2.flush()
-        print("size %d goal %d epoch %d train done" % (size, goal, epoch))
+        end = time.time()
+        print("size %d goal %d epoch %d train done, time: %s" % (size, goal, epoch, str(end-start)))
 
     tr.save(model.state_dict(), model_file)
 

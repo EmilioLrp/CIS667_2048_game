@@ -18,10 +18,11 @@ def play(mode: PlayInterface, size, goal, mode_name):
     node_count = 0
     file_name = "%d_%d_%s_result.txt" % (size, goal, mode_name)
     while not game.game_over[0]:
-        if isinstance(mode, URand):
-            action, nodes = mode.play_auto(game=game)
-        else:
-            action, nodes = mode.play(game=game)
+        # if isinstance(mode, URand):
+        #     action, nodes = mode.play_auto(game=game)
+        # else:
+        #     action, nodes = mode.play(game=game)
+        action, nodes = mode.play_auto(game=game)
         if not game.valid_action(action=action):
             print("Action Invalid!! Game board not updated!!!")
             continue
