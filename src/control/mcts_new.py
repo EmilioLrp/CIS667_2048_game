@@ -107,7 +107,11 @@ class MCTSNew(PlayInterface):
         self._calculate_score(root)
         return root, nodes
 
-    def play(self, game: Game) -> (str, int):
+    def play(self, game:Game):
+        input("Press Enter to continue:")
+        return self.play_auto(game)
+
+    def play_auto(self, game: Game) -> (str, int):
         start = time.time()
         move, nodes = self._play(game)
         end = time.time()

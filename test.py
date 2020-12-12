@@ -1,6 +1,7 @@
 import test.game_test as gtest
 from src.control.manual import Manual
 from src.control.mcts_new import MCTSNew
+from src.control.mcts_nn import MCTS_NN
 from src.control.uniform_random import URand
 from src.control.play import PlayInterface
 from src.game.game import Game
@@ -18,7 +19,7 @@ def play(mode: PlayInterface, size, goal, mode_name):
     file_name = "%d_%d_%s_result.txt" % (size, goal, mode_name)
     while not game.game_over[0]:
         if isinstance(mode, URand):
-            action, nodes = mode.play_game(game=game)
+            action, nodes = mode.play_auto(game=game)
         else:
             action, nodes = mode.play(game=game)
         if not game.valid_action(action=action):
@@ -59,15 +60,21 @@ if __name__ == '__main__':
 
     rand_modes = [(3, 128, "rand"), (3, 256, "rand"), (3, 512, "rand"), (4, 1024, "rand"), (4, 2048, "rand")]
     mcts_modes = [(3, 128, "mcts"), (3, 256, "mcts"), (3, 512, "mcts"), (4, 1024, "mcts"), (4, 2048, "mcts")]
+    nn_modes = [(3, 128, "nn"), (3, 256, "nn"), (3, 512, "nn"), (4, 1024, "nn"), (4, 2048, "nn")]
 
     # for size, goal, name in rand_modes:
     #     for i in range(100):
     #         play(mode=action_mode, size=size, goal=goal, mode_name=name)
 
-    action_mode = MCTSNew()
-    for size, goal, name in mcts_modes:
-        for i in range(20):
-            play(mode=action_mode, size=size, goal=goal, mode_name=name)
+    # action_mode = MCTSNew()
+    # for size, goal, name in mcts_modes:
+    #     for i in range(20):
+    #         play(mode=action_mode, size=size, goal=goal, mode_name=name)
             # with open(file="log.log", mode='a') as log:
             #     log.write("iteration %s has complete" % str(i))
     # print(time.time() - start)
+
+    for size, goal, name in nn_modes:
+        action_mode = MCTS_NN(game_size=size, game_goal= goal)
+        for i in range(100):
+            play(mode=action_mode, size=size, goal=goal, mode_name=name)

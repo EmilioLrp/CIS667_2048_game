@@ -8,3 +8,6 @@ class Manual(PlayInterface):
 
     def play(self, game: Game) -> (str, int):
         return input("Please input a move: "), 1
+
+    def play_auto(self, game:Game):
+        pass

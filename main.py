@@ -3,6 +3,7 @@ from src.control.manual import Manual
 from src.control.mcts_new import MCTSNew
 from src.control.uniform_random import URand
 from src.control.play import PlayInterface
+from src.control.mcts_nn import MCTS_NN
 from src.game.game import Game
 import sys
 
@@ -17,12 +18,12 @@ move_mapping = {
     '9': 'Upper right',
 }
 
+
 def unit_test():
     gtest.start_test()
 
 
-def play(mode: PlayInterface):
-    size, goal = get_customed_size_board()
+def play(size, goal, mode: PlayInterface):
     game = Game()
     game.init_board(size=int(size), goal=int(goal))
     game.display()
@@ -47,13 +48,14 @@ def play(mode: PlayInterface):
     else:
         print("you loose!!!")
 
+
 def get_customed_size_board():
     choice = input("please select a game question instance:\n"
-          "a: 3*3, 128\n"
-          "b: 3*3, 256\n"
-          "c: 4*4, 512\n"
-          "d: 4*4, 1024\n"
-          "e: 4*4, 2048\n")
+                   "a: 3*3, 128\n"
+                   "b: 3*3, 256\n"
+                   "c: 4*4, 512\n"
+                   "d: 4*4, 1024\n"
+                   "e: 4*4, 2048\n")
     if choice == "a":
         return 3, 128
     elif choice == "b":
@@ -67,20 +69,27 @@ def get_customed_size_board():
     else:
         raise BaseException
 
+
 if __name__ == '__main__':
     action_mode = None
+    size, goal = get_customed_size_board()
     while True:
         mode = input(
-            "please input a mode to start the game(m for manual, mcts for tree search, urand for universal random ml for machine learning): ")
-        if mode == "m":
+            "please input a mode to start the game:\n" +
+            "[human] for manual play\n" +
+            "[baseline] for auto play based on universal random selection\n"+
+            "[tree] for auto play based on tree search\n"+
+            "[tree-nn] for auto play based on tree search + NN\n")
+        if mode == "human":
             action_mode = Manual()
             break
-        elif mode == "mcts":
+        elif mode == "tree":
             action_mode = MCTSNew()
             break
-        # elif mode == "ml":
-        #     break
-        elif mode == "urand":
+        elif mode == "tree-nn":
+            action_mode = MCTS_NN(game_size=size, game_goal=goal)
+            break
+        elif mode == "baseline":
             action_mode = URand()
             break
         elif mode == "test":
@@ -89,4 +98,4 @@ if __name__ == '__main__':
         else:
             print("Invalid!!! please input again!!!!")
 
-    play(mode=action_mode)
+    play(size=size, goal=goal, mode=action_mode)
