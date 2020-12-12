@@ -18,7 +18,7 @@ import pickle as pk
 def data_generator(size, goal):
     mcts = MCTSNew()
 
-    file_name = os.path.dirname(os.path.abspath(__file__)) + "/data/board_size_%d_train.dat" % size
+    file_name = os.path.dirname(os.path.abspath(__file__)) + "/data/board_size_%d_goal_%d_train.dat" % (size, goal)
     # list of game states
     state_data = []
     # list of desired output after softmax
@@ -59,8 +59,8 @@ def data_generator(size, goal):
 
 if __name__ == '__main__':
 
-    game_sizes = [(3, 256), (4, 2048)]
+    game_sizes = [(3, 128), (3, 256), (4, 512), (4, 1024), (4, 2048)]
     for size, goal in game_sizes:
-        print("Starting to generate data for game size %d" % size)
+        print("Starting to generate data for game size %d, goal%d" % (size, goal))
         data_generator(size, goal)
         print("Complete generating data")

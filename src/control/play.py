@@ -11,3 +11,5 @@ class PlayInterface:
 
     @abstractmethod
     def play(self, game: Game): raise NotImplementedError
+
+    def play_auto(self, game:Game): raise NotImplementedError
