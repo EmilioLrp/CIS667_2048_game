@@ -16,14 +16,15 @@ sys.setrecursionlimit(4000)
 
 
 class MCTS_NN(PlayInterface):
-    def __init__(self, game_size):
+    def __init__(self, game_size, game_goal):
         self._size = game_size
+        self._goal = game_goal
         self._model = self._load_nn()
         self._action = [act.get_value() for act in Action.__members__.values()]
 
     def _load_nn(self):
         model = NNModel(self._size)
-        model_file = os.path.abspath(os.getcwd()) + "/model/board_size_%d_model.mod" % self._size
+        model_file = os.path.abspath(os.getcwd()) + "/model/board_size_%d_goal_%d_model.mod" % (self._size, self._goal)
         model.load_state_dict(tr.load(model_file))
         return model
 

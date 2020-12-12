@@ -87,7 +87,7 @@ if __name__ == '__main__':
             action_mode = MCTSNew()
             break
         elif mode == "tree-nn":
-            action_mode = MCTS_NN(game_size=size)
+            action_mode = MCTS_NN(game_size=size, game_goal=goal)
             break
         elif mode == "baseline":
             action_mode = URand()

@@ -19,7 +19,7 @@ def play(mode: PlayInterface, size, goal, mode_name):
     file_name = "%d_%d_%s_result.txt" % (size, goal, mode_name)
     while not game.game_over[0]:
         if isinstance(mode, URand):
-            action, nodes = mode.play_game(game=game)
+            action, nodes = mode.play_auto(game=game)
         else:
             action, nodes = mode.play(game=game)
         if not game.valid_action(action=action):
@@ -75,6 +75,6 @@ if __name__ == '__main__':
     # print(time.time() - start)
 
     for size, goal, name in nn_modes:
-        action_mode = MCTS_NN(game_size=size)
+        action_mode = MCTS_NN(game_size=size, game_goal= goal)
         for i in range(100):
-            play_auto(mode=action_mode, size=size, goal=goal, mode_name=name)
+            play(mode=action_mode, size=size, goal=goal, mode_name=name)
