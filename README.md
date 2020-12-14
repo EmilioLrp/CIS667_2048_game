@@ -2,8 +2,24 @@
 
 The project implemented an advanced version of classical game 2048 with tree search and machine learning algorithm.
 Specifically, it has the following modifications:
-* **Game Mode**: Game players are allowed to swipe horizontally, vertically, and diagonally.
-* **Board Size**: The game board is 4x4 by default, and can be enlarged, which involved modification of the source code. The larger the game board is, the larger the game goal is. `game goal = 2 ^ (game size + 7)`
+* **Moves**: Game players are allowed to swipe horizontally, vertically, and diagonally. Using the `3 * 3` number keyboard as follows, to map the moving direction to action input. For example, press 8 to move up.
+	
+	7, 8, 9\
+	4, \_, 6\
+	1, 2, 3
+	
+* **Game Mode**: There are in total 4 modes for user to choose. All auto play modes (or except the only manual mode) requires player to press `Enter` to continue to the next move.
+	* **human**: In this mode the player is able to play the game manually. This mode is the only mode that allows the player to play manually. Input a move and press `Enter` to perform the action.
+	* **baseline**: In this mode a universal random selection is adopt to perform the auto play.
+	* **tree**: A MCTS is adopt to perform the auto play.
+	* **tree-nn**: A trained neural network on top of the MCTS is used.
+
+* **Game instances**: 5 predefined game instance is defined for player to choose. 
+	* size: `3*3`, goal: `128`
+    * size: `3*3`, goal: `256`
+    * size: `4*4`, goal: `512`
+    * size: `4*4`, goal: `1024`
+    * size: `4*4`, goal: `2048`
 
 
 ## Contributors
@@ -50,4 +66,26 @@ There might be a situation that the dependencies failed to install due to the va
 * torch
 
 ## NN module
+### Training nn model
+The data for training the neural network is stored in
+
+`/dir_to_project/data/`
+
+Make sure the data is there before training.
+
+The data provided is used to train the provided 5 game instances, any change on the game instance will result in the requirement of modifying the source code.
+
+Training data can be genenerated by running the `training_data_generator.py`, this script will generate training data from MCTS.
+
+### Loading nn model
+There are in total 3 different trained neural network models in this project. Before executing the tree-nn option, make sure that the model is correctly loaded in the following directory:
+
+`/dir_to_project/model/{name of the model that you wish to load}/`
+
+The name of the model will provided with three choices corresponding to 3 contributors of this project:
+
+* rliu02
+* dguo13
+* qfang04
+
 
