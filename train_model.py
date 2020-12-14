@@ -30,9 +30,11 @@ def train(size, goal):
 
     x_train, x_test, y_train, y_test = shuffle_data(size, x, y)
     model = conv_nn.NNModel(size)
-    optim = tr.optim.Adam(model.parameters())
+    #optim = tr.optim.Adam(model.parameters())
+    
     # optim = tr.optim.Adamax(model.parameters())
-    for epoch in range(1000):
+    optim = tr.optim.Adagrad(model.parameters())
+    for epoch in range(100):
         start = time.time()
         for i in range(len(x_train)):
             input = x_train[i]

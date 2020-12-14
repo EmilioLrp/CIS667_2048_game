@@ -51,7 +51,11 @@ def calculate_loss(model, xs, ys_des):
 def optimization_step(optimizer, model, x, y_des):
     optimizer.zero_grad()
     y = model(x)
-    loss = loss_function(y, y_des)
+    #loss = loss_function(y, y_des)
+    #print(y[0], y_des)
+    #input()
+    ls = tr.nn.L1Loss()
+    loss = ls(y, y_des)
     # y, loss = calculate_loss(model, x, y_des)
     loss.backward()
     optimizer.step()
