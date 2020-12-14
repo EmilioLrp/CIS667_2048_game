@@ -28,7 +28,7 @@ class MCTS_NN(PlayInterface):
         if mode_dir == 'rliu02':
             from src.model.conv_nn_rliu02 import NNModel
         elif mode_dir == 'dguo13':
-            from src.model.conv_nn_rliu02 import NNModel
+            from src.model.conv_nn_dguo13 import NNModel
         else:
             from src.model.conv_nn_rliu02 import NNModel
         model = NNModel(self._size)

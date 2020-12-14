@@ -36,7 +36,7 @@ def train(size, goal, mod_dir):
     if mod_dir == 'rliu02':
         import src.model.conv_nn_rliu02 as nn
     elif mod_dir == 'dguo13':
-        import src.model.conv_nn_rliu02 as nn
+        import src.model.conv_nn_dguo13 as nn
     else:
         import src.model.conv_nn_rliu02 as nn
     model = nn.NNModel(size)
