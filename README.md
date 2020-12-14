@@ -47,3 +47,7 @@ There might be a situation that the dependencies failed to install due to the va
 
 * numpy
 * enum
+* torch
+
+## NN module
+

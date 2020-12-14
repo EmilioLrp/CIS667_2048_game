@@ -1,9 +1,12 @@
-import pickle
-import src.control.conv_nn as conv_nn
-import torch as tr
 import os
-import numpy as np
+import pickle
 import time
+
+import numpy as np
+import torch as tr
+
+# import src.model.conv_nn_rliu02 as rliu02_conv
+
 
 def shuffle_data(size, x, y):
     shuffle = np.random.permutation(range(len(x)))
@@ -20,16 +23,23 @@ def shuffle_data(size, x, y):
     return x_train, x_test, y_train, y_test
 
 
-def train(size, goal):
+def train(size, goal, mod_dir):
     file1 = os.path.dirname(os.path.abspath(__file__)) + "/data/board_size_%d_goal_%d_train.dat" % (size, goal)
-    model_file = os.path.dirname(os.path.abspath(__file__)) + "/model/board_size_%d_goal_%d_model.mod" % (size, goal)
+    model_file = os.path.dirname(os.path.abspath(__file__)) + "/model/%s/board_size_%d_goal_%d_model.mod" % (mod_dir, size, goal)
     train_error_file = "size_%d_goal_%d_train_error.txt" % (size, goal)
     test_error_file = "size_%d_goal_%d_test_error.txt" % (size, goal)
     with open(file1, 'rb') as f1:
         (x, y) = pickle.load(f1)
 
     x_train, x_test, y_train, y_test = shuffle_data(size, x, y)
-    model = conv_nn.NNModel(size)
+
+    if mod_dir == 'rliu02':
+        import src.model.conv_nn_rliu02 as nn
+    elif mod_dir == 'dguo13':
+        import src.model.conv_nn_rliu02 as nn
+    else:
+        import src.model.conv_nn_rliu02 as nn
+    model = nn.NNModel(size)
     optim = tr.optim.Adam(model.parameters())
     # optim = tr.optim.Adamax(model.parameters())
     for epoch in range(150):
@@ -37,10 +47,10 @@ def train(size, goal):
         for i in range(len(x_train)):
             input = x_train[i]
             output = y_train[i]
-            conv_nn.train(model, optim, input, output)
+            nn.train(model, optim, input, output)
 
-        train_loss = conv_nn.calculate_loss(model, x_train, y_train)
-        test_loss = conv_nn.calculate_loss(model, x_test, y_test)
+        train_loss = nn.calculate_loss(model, x_train, y_train)
+        test_loss = nn.calculate_loss(model, x_test, y_test)
         train_loss_str = "epoch: %d, loss: %s\n" % (epoch, str(train_loss))
         test_loss_str = "epoch: %d, loss: %s\n" % (epoch, str(test_loss))
 
@@ -58,8 +68,9 @@ def train(size, goal):
 
 
 if __name__ == '__main__':
+    mod_dir = 'rliu02'
     game_size = [(3, 128), (3, 256), (4, 512), (4, 1024), (4, 2048)]
     # game_size = [(3, 256)]
     for s,g in game_size:
-        train(s, g)
+        train(s, g, mod_dir)
         print("size %d train done" % s)
