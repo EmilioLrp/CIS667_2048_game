@@ -87,7 +87,11 @@ if __name__ == '__main__':
             action_mode = MCTSNew()
             break
         elif mode == "tree-nn":
-            action_mode = MCTS_NN(game_size=size, game_goal=goal)
+            ind_dir = input("Please input the individual mode that you want to load (rliu02, dguo13, qfang04): ")
+            if ind_dir not in ['rliu02', 'dguo13', 'qfang04']:
+                print("no such model is found, system exit")
+                sys.exit(1)
+            action_mode = MCTS_NN(game_size=size, game_goal=goal, mode_dir=ind_dir)
             break
         elif mode == "baseline":
             action_mode = URand()

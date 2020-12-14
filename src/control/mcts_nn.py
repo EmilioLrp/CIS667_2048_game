@@ -1,30 +1,38 @@
-from src.game.game import Game
-from src.control.play import PlayInterface
-from src.control.mcts_new import MCT
-from src.control.conv_nn import NNModel
-from src.game.actions import Action
-import torch as tr
 import copy
-import numpy as np
-import random
-import time
-import os
-import sys
 import operator
+import os
+import random
+import sys
+import time
+
+import numpy as np
+import torch as tr
+
+from src.control.mcts_new import MCT
+from src.control.play import PlayInterface
+from src.game.actions import Action
+from src.game.game import Game
+
 
 sys.setrecursionlimit(4000)
 
 
 class MCTS_NN(PlayInterface):
-    def __init__(self, game_size, game_goal):
+    def __init__(self, game_size, game_goal, mode_dir='rliu02'):
         self._size = game_size
         self._goal = game_goal
-        self._model = self._load_nn()
+        self._model = self._load_nn(mode_dir)
         self._action = [act.get_value() for act in Action.__members__.values()]
 
-    def _load_nn(self):
+    def _load_nn(self, mode_dir):
+        if mode_dir == 'rliu02':
+            from src.model.conv_nn_rliu02 import NNModel
+        elif mode_dir == 'dguo13':
+            from src.model.conv_nn_dguo13 import NNModel
+        else:
+            from src.model.conv_nn_rliu02 import NNModel
         model = NNModel(self._size)
-        model_file = os.path.abspath(os.getcwd()) + "/model/board_size_%d_goal_%d_model.mod" % (self._size, self._goal)
+        model_file = os.path.abspath(os.getcwd()) + "/model/%s/board_size_%d_goal_%d_model.mod" % (mode_dir, self._size, self._goal)
         model.load_state_dict(tr.load(model_file))
         return model
 
