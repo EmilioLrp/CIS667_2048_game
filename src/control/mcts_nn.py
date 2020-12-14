@@ -24,10 +24,17 @@ class MCTS_NN(PlayInterface):
 
     def _load_nn(self):
         model = NNModel(self._size)
-        model_file = os.path.abspath(os.getcwd()) + "/model/board_size_%d_goal_%d_model.mod" % (self._size, self._goal)
+        individual_dir = self._get_individual_modle()
+        model_file = os.path.abspath(os.getcwd()) + "/model/%s/board_size_%d_goal_%d_model.mod" % (individual_dir,self._size, self._goal)
         model.load_state_dict(tr.load(model_file))
         return model
 
+    def _get_individual_modle(self):
+        ind_dir = input("Please input the individual mode that you want to load (rliu02, dguo13, qfang04): ")
+        if ind_dir not in ['rliu02', 'dguo13', 'qfang04']:
+            print("no such model is found, system exit")
+            sys.exit(1)
+        return ind_dir
     def roll_out(self, root: MCT, state: Game, depth=5) -> (MCT, int):
         root.inc_move_count()
         game_over, win = state.game_over

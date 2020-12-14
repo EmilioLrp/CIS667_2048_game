@@ -5,6 +5,7 @@ import random
 import copy
 import numpy as np
 import pickle as pk
+import time
 
 
 # def training_data_generator():
@@ -24,7 +25,9 @@ def data_generator(size, goal):
     # list of desired output after softmax
     desired_output = []
     # count = 100
-    while len(state_data) < 4000:
+    count = 0
+    while count <= 25:
+        start = time.time()
         game = Game()
         game.init_board(size=size, goal=goal)
         while not game.game_over[0]:
@@ -39,7 +42,7 @@ def data_generator(size, goal):
             for move in actions:
                 state = copy.deepcopy(game)
                 root_child = MCT(state=state)
-                root_child, _ = mcts.roll_out(root=root_child, state=state, depth=None)
+                root_child, _ = mcts.roll_out(root=root_child, state=state, depth=10)
                 actions_dict[
                     move] = root_child.get_game_state().get_weighted_score() + 2  # for normalizing -1 to 1, differentiating 0
                 action_child_pair[move] = root_child
@@ -51,6 +54,9 @@ def data_generator(size, goal):
             desired_output.append(softmax_scores)
 
             game.do_action(random.choice(candidates))
+        count += 1
+        end = time.time()
+        print("size %d goal %d game %d done, time : %s" % (size, goal, count, str(end - start)))
             # count -= 1
 
     with open(file_name, "wb") as f:

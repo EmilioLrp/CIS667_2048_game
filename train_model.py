@@ -32,7 +32,7 @@ def train(size, goal):
     model = conv_nn.NNModel(size)
     optim = tr.optim.Adam(model.parameters())
     # optim = tr.optim.Adamax(model.parameters())
-    for epoch in range(1000):
+    for epoch in range(150):
         start = time.time()
         for i in range(len(x_train)):
             input = x_train[i]
